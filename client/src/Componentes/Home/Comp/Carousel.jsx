@@ -14,7 +14,7 @@ function Carousel() {
    ]
    return (
       <>
-         <section className='flex justify-center items-center mx-80 max-sm:mx-2'>
+         <section className='flex justify-center items-center mx-80 max-xl:mx-2 max-lg:mx-2 max-sm:mx-2'>
             <OwlCarousel className='owl-theme' items={1} autoplay loop dots={false}>
                {
                   imgCarousel.map((item) => (
