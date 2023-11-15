@@ -4,7 +4,7 @@ function Elecciones({ eleccion }) {
 
    return (
       <>
-         <div className='border-delgado my-4 mx-10 py-5 px-10 text-justify'>
+         <div className='border-delgado my-4 mx-10 max-sm:mx-2 max-sm:px-3 py-5 px-10 text-justify'>
             {
                eleccion === 1 ? (
                   <>
