@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+   height: 100%;
+   width: 100%;
+   font-family: 'Lexend', sans-serif;
+   font-weight: 200;
+   /* font-family: 'DM Sans', sans-serif; */
+}
+
+.border-delgado {
+   border: 0.5px solid #cecece;
+}
+
+.border-delgado-t {
+   border-top: 0.5px solid #cecece;
+}
+
+.border-delgado-b {
+   border-bottom: 0.5px solid #cecece;
+}
+
+.border-delgado-r {
+   border-right: 0.5px solid #cecece;
+}
+
+.border-delgado-l {
+   border-left: 0.5px solid #cecece;
+}
