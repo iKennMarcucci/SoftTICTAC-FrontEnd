@@ -141,7 +141,7 @@ function Navbar() {
                         }
                      </div>
                      :
-                     <Link to={'/login'} className='bg-blue-300 hover:bg-blue-400 p-2 rounded-md font-light'>
+                     <Link to={'/login'} className='bg-blue-300 hover:bg-blue-400 p-2 rounded-md font-light truncate'>
                         Iniciar Sesión
                      </Link>
                }
@@ -164,12 +164,12 @@ function Navbar() {
                >
                   <ul className='flex'>
                      <li className='px-4'>
-                        <Link to="/" className="hover:text-blue-500">
+                        <Link to="/modulo/herramientas-pedagogicas" className="hover:text-blue-500">
                            Herramientas Pedagógicas
                         </Link>
                      </li>
                      <li className='px-4'>
-                        <Link to="/" className="hover:text-blue-500">
+                        <Link to="/modulo/contenidos-digitales" className="hover:text-blue-500">
                            Contenidos Digitales
                         </Link>
                      </li>
@@ -198,12 +198,12 @@ function Navbar() {
                         </Link>
                      </li>
                      <li className='px-4'>
-                        <Link to="/" className="hover:text-blue-500">
+                        <Link to="/modulo/herramientas-pedagogicas" className="hover:text-blue-500">
                            Herramientas Pedagógicas
                         </Link>
                      </li>
                      <li className='px-4'>
-                        <Link to="/" className="hover:text-blue-500">
+                        <Link to="/modulo/contenidos-digitales" className="hover:text-blue-500">
                            Contenidos Digitales
                         </Link>
                      </li>

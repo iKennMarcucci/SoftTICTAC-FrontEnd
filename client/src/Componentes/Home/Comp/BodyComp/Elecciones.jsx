@@ -4,8 +4,8 @@ function Elecciones({ eleccion }) {
 
    return (
       <>
-         <div className='border-delgado my-4 mx-10 max-sm:mx-2 max-sm:px-3 py-5 px-10 text-justify overflow-y-scroll'
-            style={{ maxHeight: '800px' }}>
+         <div className='border-delgado my-4 mx-10 max-sm:mx-2 max-sm:px-3 py-5 px-10 text-justify overflow-y-scroll scrollbar-hidden'
+            style={{ maxHeight: '840px' }}>
             {
                eleccion === 1 ? (
                   <>

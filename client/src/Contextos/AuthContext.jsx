@@ -17,7 +17,6 @@ const AuthContextProvider = ({ children }) => {
          if (token) {
             setIsAuthenticated(true);
             setUser(JSON.parse(token));
-            console.log("User authenticated");
             return;
          }
       } catch (error) {
@@ -45,7 +44,6 @@ const AuthContextProvider = ({ children }) => {
          localStorage.removeItem("token");
          setIsAuthenticated(false);
          setUser(null);
-         console.log("user logged out");
       } catch (error) {
          console.error(error);
       }
