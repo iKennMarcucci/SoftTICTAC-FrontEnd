@@ -4,7 +4,7 @@ import img from '../../public/Logos/LogoFull.webp'
 
 function Footer() {
    const location = useLocation()
-   const showFooter = location.pathname !== '/login'
+   const showFooter = location.pathname !== '/login' && !location.pathname.startsWith('/controlpanel');
 
    return showFooter && (
       <>

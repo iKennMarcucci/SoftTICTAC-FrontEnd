@@ -17,8 +17,9 @@ const AuthContextProvider = ({ children }) => {
          if (token) {
             setIsAuthenticated(true);
             setUser(JSON.parse(token));
-            return;
+            return true;
          }
+         return false;
       } catch (error) {
          console.error(error);
       }
@@ -44,14 +45,16 @@ const AuthContextProvider = ({ children }) => {
          localStorage.removeItem("token");
          setIsAuthenticated(false);
          setUser(null);
+         return { status: 200 }
       } catch (error) {
          console.error(error);
       }
    }
 
    const value = {
-      login, logout,
-      user, isAuthenticated
+      login, logout, verifySession,
+      user, isAuthenticated,
+
    };
 
    return (

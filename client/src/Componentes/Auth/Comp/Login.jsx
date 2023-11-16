@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../../../Contextos/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
    const { login } = useAuth();
+   const navigate = useNavigate();
 
    const [formData, setFormData] = useState({
       username: "",
@@ -19,7 +21,7 @@ function Login() {
          }
          const res = await login(data)
          if (res.status === 200) {
-            console.log("Inicio de Sesión Completado");
+            navigate('/')
          }
       } catch (error) {
          console.error(error);

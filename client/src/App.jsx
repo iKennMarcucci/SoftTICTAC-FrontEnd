@@ -7,6 +7,9 @@ import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes"
 import { useAuth } from "./Contextos/AuthContext"
 import Digitales from "./Componentes/Modulos/Digitales/Digitales"
 import Herramientas from "./Componentes/Modulos/Herramientas/Herramientas"
+import Control from "./ComponentesPrivados/Home/Control"
+import Dashboard from "./ComponentesPrivados/Dashboard"
+import { RecoilRoot } from 'recoil';
 
 function App() {
 
@@ -14,20 +17,25 @@ function App() {
 
    return (
       <>
-         <Navbar />
-         <Routes>
-            <Route path={'/'} element={<Home />} />
-            <Route path='/login' element={isAuthenticated ? <Navigate to="/" /> : <Auth />} />
-            <Route path='/modulo/contenidos-digitales' element={<Digitales />} />
-            <Route path='/modulo/herramientas-pedagogicas' element={<Herramientas />} />
+         <RecoilRoot>
+            <Navbar />
+            <Dashboard />
+            <Routes>
+               <Route path={'/'} element={<Home />} />
+               <Route path='/login' element={isAuthenticated ? <Navigate to="/" /> : <Auth />} />
+               <Route path='/modulo/contenidos-digitales' element={<Digitales />} />
+               <Route path='/modulo/herramientas-pedagogicas' element={<Herramientas />} />
 
-            <Route element={<ProtectedRoutes />}>
-               <Route path='/controlpanel' element={""} />
-            </Route>
 
-            <Route path={'*'} element={'No encontrado'} />
-         </Routes>
-         <Footer />
+               <Route element={<ProtectedRoutes />}>
+                  <Route path='/controlpanel' element={<Control />} />
+               </Route>
+
+
+               <Route path={'*'} element={'No encontrado'} />
+            </Routes>
+            <Footer />
+         </RecoilRoot>
       </>
    )
 }
