@@ -4,13 +4,19 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import AuthContextProvider from './Contextos/AuthContext.jsx';
+import HerramientasContextProvider from './Contextos/ModuleContexts/HerramientasContext.jsx';
+import DigitalesContextProvider from './Contextos/ModuleContexts/DigitalesContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
    <React.StrictMode>
       <AuthContextProvider>
-         <BrowserRouter>
-            <App />
-         </BrowserRouter>
+         <HerramientasContextProvider>
+            <DigitalesContextProvider>
+               <BrowserRouter>
+                  <App />
+               </BrowserRouter>
+            </DigitalesContextProvider>
+         </HerramientasContextProvider>
       </AuthContextProvider>
    </React.StrictMode>,
 )

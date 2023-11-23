@@ -1,212 +1,9 @@
 import React from 'react'
+import { useHerramienta } from '../../../Contextos/ModuleContexts/HerramientasContext';
 
 function Herramientas() {
 
-   const poblaciones = [
-      {
-         id: 1,
-         poblacion: "Basica Primaria",
-      },
-      {
-         id: 2,
-         poblacion: "Básica Secundaria",
-      },
-      {
-         id: 3,
-         poblacion: "Media",
-      },
-   ]
-
-   const ejes = [
-      {
-         id: 1,
-         eje: "Emprendimiento",
-      },
-      {
-         id: 2,
-         eje: "Sexualidad",
-      },
-      {
-         id: 3,
-         eje: "Medio Ambiente",
-      },
-      {
-         id: 4,
-         eje: "Relaciones Sociales",
-      },
-      {
-         id: 5,
-         eje: "TICS",
-      },
-   ]
-
-   // Las competencias ya existen segun Janeth
-   const competencias = [
-      {
-         id: 1,
-         compe: "Participa activamente en los ámbitos sociales e interpersonales, manifestando solidaridad e interés por la comunidad.",
-      },
-      {
-         id: 2,
-         compe: "Participa activamente en los ámbitos sociales e interpersonales, manifestando solidaridad e interés por la comunidad.",
-      },
-   ]
-
-   const recursos = [
-      {
-         id: 1,
-         recurso: "Proyector",
-      },
-      {
-         id: 2,
-         recurso: "Parlantes",
-      },
-      {
-         id: 3,
-         recurso: "Lapiceros y Marcadores",
-      },
-      {
-         id: 4,
-         recurso: "Hojas y Carteleras",
-      },
-   ]
-
-   const textoDesarrollo = "El taller se desarrolla a través de las siguientes actividades que se describen a continuación:"
-
-   const estructura = [
-      {
-         id: 1,
-         titulo: "Las Tecnologías y Yo",
-         poblacion: poblaciones[0],
-         eje: ejes[0],
-         tema: "Solidaridad",
-         objetivo: [
-            {
-               id: 1,
-               obj: "Fomentar el reconocimiento del cuerpo fisico."
-            },
-            {
-               id: 2,
-               obj: "Conocer las diferencias físicas entre niños y niñas."
-            },
-         ],
-         competencias: [
-            competencias[0],
-            competencias[1]
-         ],
-         momentos: {
-            presentacion: "El docente da la bienvenida a niños y niñas y les habla de la importancia de la solidaridad. Menciona que van a aprender la canción 'La solidaridad'.",
-            desarrollo: textoDesarrollo,
-            cierre: "El encuentro finaliza sugiriendo a los niños y niñas que compartan la canción, entonándola para su familia.",
-         },
-         procesos: [
-            {
-               id: 1,
-               proceso: "Se escucha la canción “La solidaridad: canción infantil para reforzar valores” con los estudiantes y se reitera hasta que ellos empiecen a repetir la letra. Se habla de la importancia de la solidaridad y cómo esta canción tiene algunos elementos que permiten valorar si somos solidarios.",
-               recursos: [
-                  recursos[0],
-                  recursos[3]
-               ],
-               tiempoMilis: 1800000
-            },
-            {
-               id: 2,
-               proceso: "Se escucha la canción “La solidaridad: canción infantil para reforzar valores” con los estudiantes y se reitera hasta que ellos empiecen a repetir la letra. Se habla de la importancia de la solidaridad y cómo esta canción tiene algunos elementos que permiten valorar si somos solidarios.",
-               recursos: [
-                  recursos[0],
-                  recursos[3]
-               ],
-               tiempoMilis: 1800000
-            },
-            {
-               id: 3,
-               proceso: "Se escucha la canción “La solidaridad: canción infantil para reforzar valores” con los estudiantes y se reitera hasta que ellos empiecen a repetir la letra. Se habla de la importancia de la solidaridad y cómo esta canción tiene algunos elementos que permiten valorar si somos solidarios.",
-               recursos: [
-                  recursos[0],
-                  recursos[3]
-               ],
-               tiempoMilis: 1800000
-            },
-         ],
-         recomendaciones: [
-            {
-               id: 1,
-               recomendacion: "La canción la pueden presentar los niños en una izada de bandera."
-            },
-            {
-               id: 2,
-               recomendacion: "Se puede reforzar el aprendizaje de la melodía con los padres, pidiendoles que la escuchen en el hogar."
-            },
-         ],
-         publico: true,
-      },
-      {
-         id: 2,
-         titulo: "Las Tecnologías y Yo",
-         poblacion: poblaciones[0],
-         eje: ejes[0],
-         tema: "Solidaridad",
-         objetivo: [
-            {
-               id: 1,
-               obj: "Fomentar el reconocimiento del cuerpo fisico."
-            },
-            {
-               id: 2,
-               obj: "Conocer las diferencias físicas entre niños y niñas."
-            },
-         ],
-         competencias: [
-            competencias[0],
-            competencias[1]
-         ],
-         momentos: {
-            presentacion: "El docente da la bienvenida a niños y niñas y les habla de la importancia de la solidaridad. Menciona que van a aprender la canción 'La solidaridad'.",
-            desarrollo: textoDesarrollo,
-            cierre: "El encuentro finaliza sugiriendo a los niños y niñas que compartan la canción, entonándola para su familia.",
-         },
-         procesos: [
-            {
-               id: 1,
-               proceso: "Se escucha la canción “La solidaridad: canción infantil para reforzar valores” con los estudiantes y se reitera hasta que ellos empiecen a repetir la letra. Se habla de la importancia de la solidaridad y cómo esta canción tiene algunos elementos que permiten valorar si somos solidarios.",
-               recursos: [
-                  recursos[0],
-                  recursos[3]
-               ],
-               tiempoMilis: 1800000
-            },
-            {
-               id: 2,
-               proceso: "Se escucha la canción “La solidaridad: canción infantil para reforzar valores” con los estudiantes y se reitera hasta que ellos empiecen a repetir la letra. Se habla de la importancia de la solidaridad y cómo esta canción tiene algunos elementos que permiten valorar si somos solidarios.",
-               recursos: [
-                  recursos[0],
-                  recursos[3]
-               ],
-               tiempoMilis: 1800000
-            },
-            {
-               id: 3,
-               proceso: "Se escucha la canción “La solidaridad: canción infantil para reforzar valores” con los estudiantes y se reitera hasta que ellos empiecen a repetir la letra. Se habla de la importancia de la solidaridad y cómo esta canción tiene algunos elementos que permiten valorar si somos solidarios.",
-               recursos: [
-                  recursos[0],
-                  recursos[3]
-               ],
-               tiempoMilis: 1800000
-            },
-         ],
-         recomendaciones: [
-            {
-               id: 1,
-               recomendacion: "La canción la pueden presentar los niños en una izada de bandera."
-            },
-            {
-               id: 2,
-               recomendacion: "Se puede reforzar el aprendizaje de la melodía con los padres, pidiendoles que la escuchen en el hogar."
-            },
-         ],
-         publico: true,
-      },
-   ]
+   const { herramientas } = useHerramienta()
 
    const calcularTiempo = (tiempoMilis) => {
       var horas = Math.floor(tiempoMilis / (1000 * 60 * 60));
@@ -230,7 +27,7 @@ function Herramientas() {
       return calcularTiempo(res)
    }
 
-   return estructura ? (
+   return herramientas ? (
       <>
          <main className='container mx-auto mt-10'>
             <h2 className='text-2xl font-medium max-sm:mx-2'>
@@ -239,7 +36,7 @@ function Herramientas() {
             <hr className='border-stone-400 max-sm:mx-2' />
             <section className='container mx-auto mt-10 grid grid-cols-12 justify-items-center'>
                {
-                  estructura.map((item, index) => item.publico && (
+                  herramientas.map((item, index) => item.publico && (
                      <div key={index} className='max-sm:-translate-y-32 max-sm:scale-90 col-span-6 max-xl:col-span-12 border-delgado rounded-md p-4 m-2'>
                         <div>
                            <h4 className='font-medium text-center text-2xl mb-4'>Herramienta {item.id} - {item.titulo}</h4>

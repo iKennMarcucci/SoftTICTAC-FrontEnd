@@ -29,6 +29,8 @@ function App() {
 
                <Route element={<ProtectedRoutes />}>
                   <Route path='/controlpanel' element={<Control />} />
+                  <Route path='/controlpanel/herramientas' element={<Control />} />
+                  <Route path='/controlpanel/contenidos-digitales' element={<Control />} />
                </Route>
 
 

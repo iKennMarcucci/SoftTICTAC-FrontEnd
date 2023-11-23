@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../Contextos/AuthContext'
 import LogoFull from '../../public/Logos/LogoFull.webp'
-import userImage from '../../public/User/user.webp'
 
 function Navbar() {
    const location = useLocation()
@@ -15,7 +14,7 @@ function Navbar() {
    const menuButtonRef = useRef(null);
    const menuRef = useRef(null);
 
-   const { isAuthenticated, user, logout } = useAuth();
+   const { isAuthenticated, logout } = useAuth();
 
    const cerrarSesion = async () => {
       const res = await logout()
@@ -59,7 +58,7 @@ function Navbar() {
 
    return showNavbar && (
       <>
-         <nav className='bg-blue-100 sticky top-0 w-full h-24 flex items-center justify-between max-sm:px-2 px-10 space-x-10 z-50'>
+         <nav className='bg-blue-100 sticky top-0 w-full h-24 flex items-center justify-between max-sm:px-2 px-10 space-x-10 z-40'>
             <div className='flex h-full items-center'>
                <Link to={'/'} className='max-lg:mr-0 mr-10'>
                   <img src={LogoFull} alt="Logo" width={150} />
@@ -81,38 +80,27 @@ function Navbar() {
                         Estadísticas
                      </Link>
                   </li>
-                  <li className='px-2 flex items-center h-full'>
-                     <Link to={'/'} className='h-full flex items-center font-medium hover:text-blue-500'>
-                        Prueba
-                     </Link>
-                  </li>
                </ul>
             </div>
             <div className='flex items-center space-x-2'>
                {
                   isAuthenticated ?
                      <div className="relative ml-3">
-                        <button
+                        <button className='relative flex w-8 h-8 p-1 justify-center items-center gap-2.5 rounded-full bg-blue-700'
                            onClick={toggleMenu}
                            ref={menuButtonRef}
-                           type="button"
-                           className="relative flex rounded-full bg-rose-100 text-sm focus:outline-none focus:ring-1 focus:ring-gray-800 focus:ring-offset-gray-800"
-                           id="user-menu-button"
                            aria-expanded={menuClicked ? 'true' : 'false'}
                            aria-haspopup="true"
+                           id="user-menu-button"
                         >
-                           <span className="absolute -inset-1.5"></span>
-                           <span className="sr-only">Abrir Menu</span>
-                           <img
-                              className="h-8 w-8 rounded-full"
-                              src={userImage}
-                              alt=""
-                           />
+                           <svg viewBox="0 0 24 24" strokeWidth={1} className="w-5 h-5 stroke-white fill-white">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                           </svg>
                         </button>
                         {
                            menuClicked &&
                            <div
-                              className="absolute right-0 z-10 mt-2 whitespace-nowrap origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                              className="absolute right-0 z-50 mt-2 whitespace-nowrap origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                               role="menu"
                               aria-orientation="vertical"
                               aria-labelledby="user-menu-button"
@@ -158,7 +146,7 @@ function Navbar() {
          {
             cursorEnter &&
             <>
-               <nav className='w-full bg-blue-100 fixed top-24 border-blue-200 border-t-2 px-10 flex justify-center py-5 z-50 max-lg:hidden'
+               <nav className='w-full bg-blue-100 fixed top-24 border-blue-200 border-t-2 px-10 flex justify-center py-5 z-30 max-lg:hidden'
                   onMouseEnter={toggleCursorEnter}
                   onMouseLeave={() => setcursorEnter(false)}
                >
