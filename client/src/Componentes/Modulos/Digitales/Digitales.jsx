@@ -31,7 +31,7 @@ function Digitales() {
                                  <p className='text-xs mt-2 line-clamp-3' title={item.descripcion}>{item.descripcion}</p>
                               </div>
                            </div>
-                           <a href='https://github.com/iKennMarcucci' target='_blank' className='text-center cursor-pointer bg-blue-300 hover:bg-blue-400 mt-4 rounded-md py-1'>
+                           <a href='https://github.com/iKennMarcucci' target='_blank' className='text-center cursor-pointer hover:bg-blue-500 bg-blue-600 text-white font-medium mt-4 rounded-md py-1'>
                               Ver
                            </a>
                         </div>

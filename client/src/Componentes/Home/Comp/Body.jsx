@@ -25,7 +25,7 @@ function Body() {
 
                   <label
                      className={`cursor-pointer font-normal px-2 py-1.5 rounded-md hover:bg-blue-200 mx-4
-                  ${eleccion === 1 ? 'bg-blue-300' : 'bg-blue-100'}`}
+                  ${eleccion === 1 ? 'bg-blue-600 text-white hover:bg-blue-500' : 'bg-blue-100'}`}
                      htmlFor='radio1'
                   >
                      Nuestro Modelo
@@ -41,7 +41,7 @@ function Body() {
 
                   <label
                      className={`cursor-pointer font-normal px-2 py-1.5 rounded-md hover:bg-blue-200 mx-4
-                  ${eleccion === 2 ? 'bg-blue-300' : 'bg-blue-100'}`}
+                  ${eleccion === 2 ? 'bg-blue-600 text-white hover:bg-blue-500' : 'bg-blue-100'}`}
                      htmlFor='radio2'
                   >
                      Ejes Transversales
@@ -57,7 +57,7 @@ function Body() {
 
                   <label
                      className={`cursor-pointer font-normal px-2 py-1.5 rounded-md hover:bg-blue-200 mx-4
-                  ${eleccion === 3 ? 'bg-blue-300' : 'bg-blue-100'}`}
+                  ${eleccion === 3 ? 'bg-blue-600 text-white hover:bg-blue-500' : 'bg-blue-100'}`}
                      htmlFor='radio3'
                   >
                      Competencias
