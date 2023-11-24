@@ -126,8 +126,7 @@ function Dashboard() {
                <div className={`p-4 w-full ${!isOpen && 'max-sm:scale-0'}`}>
                   <input type="checkbox" id="hola" name='hola' hidden />
                   <label
-                     className={`cursor-pointer mb-1 flex items-center rounded-md justify-between px-2 hover:bg-blue-300 select-none ${crearAccordionOpen && 'bg-blue-300'}`}
-                     htmlFor='hola'
+                     className={`cursor-pointer mb-1 flex items-center rounded-md justify-between px-2 hover:bg-blue-300 select-none ${crearAccordionOpen && 'bg-blue-600 text-white'}`}
                      onClick={toggleCrearAccordion}
                   >
                      <p className={`font-medium py-1`}>Módulos</p>

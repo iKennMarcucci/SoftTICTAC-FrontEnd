@@ -69,7 +69,7 @@ function DigitalesControl() {
                         <a
                            href="https://github.com/iKennMarcucci"
                            target="_blank"
-                           className="text-white font-medium text-center cursor-pointer bg-blue-300 hover:bg-blue-400 mt-4 rounded-md py-1"
+                           className="text-white font-medium text-center cursor-pointer hover:bg-blue-500 bg-blue-600 mt-4 rounded-md py-1"
                         >
                            Ver
                         </a>

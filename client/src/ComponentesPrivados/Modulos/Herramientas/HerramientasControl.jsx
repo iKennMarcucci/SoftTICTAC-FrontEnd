@@ -92,7 +92,7 @@ function HerramientasControl() {
                                     </div>
                                  </div>
                               </div>
-                              <button onClick={() => openModal(index)} className='text-white font-medium px-20 text-center cursor-pointer bg-blue-300 hover:bg-blue-400 mb-2 rounded-md py-1'>
+                              <button onClick={() => openModal(index)} className='text-white font-medium px-20 text-center cursor-pointer hover:bg-blue-500 bg-blue-600 mb-2 rounded-md py-1'>
                                  Ver más
                               </button>
 
