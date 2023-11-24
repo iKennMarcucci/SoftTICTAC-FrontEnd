@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useHerramienta } from '../../../Contextos/ModuleContexts/HerramientasContext'
+import MoreInfo from './Comp/MoreInfo';
 import Modal from './Comp/Modal';
 
 function HerramientasControl() {
@@ -18,6 +19,16 @@ function HerramientasControl() {
       setModalOpen(false);
    };
 
+   const [isOpen, setIsOpen] = useState(false);
+
+   const openModalSubmit = () => {
+      setIsOpen(true);
+   };
+
+   const closeModalSubmit = () => {
+      setIsOpen(false);
+   };
+
    return (
       <>
          <div className='flex justify-between'>
@@ -25,10 +36,11 @@ function HerramientasControl() {
                Herramientas Pedagógicas
             </h2>
             {/* el button lo que hará es sacar un modal con el form de una herramienta */}
-            <button className=' rounded-md font-normal px-2 bg-blue-100 hover:bg-blue-300'>
+            <button onClick={() => openModalSubmit()} className=' rounded-md font-normal px-2 bg-blue-100 hover:bg-blue-300'>
                Crear una Herramienta
             </button>
          </div>
+         <Modal isOpen={isOpen} closeModal={closeModalSubmit} />
          <hr className='border-stone-400 max-sm:mx-2 mt-2 mb-4' />
          {
             herramientas ?
@@ -80,13 +92,13 @@ function HerramientasControl() {
                                     </div>
                                  </div>
                               </div>
-                              <button onClick={(e) => openModal(index)} className='text-white font-medium px-20 text-center cursor-pointer bg-blue-300 hover:bg-blue-400 mb-2 rounded-md py-1'>
+                              <button onClick={() => openModal(index)} className='text-white font-medium px-20 text-center cursor-pointer bg-blue-300 hover:bg-blue-400 mb-2 rounded-md py-1'>
                                  Ver más
                               </button>
 
                               {
                                  modalOpen && modalAbierto === index && (
-                                    <Modal key={index} id={index} item={item} closeModal={closeModal} />
+                                    <MoreInfo key={index} id={index} item={item} closeModal={closeModal} />
                                  )
                               }
 
