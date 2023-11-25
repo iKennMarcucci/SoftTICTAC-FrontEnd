@@ -16,7 +16,7 @@ const AuthContextProvider = ({ children }) => {
       try {
          const token = JSON.parse(localStorage.getItem('access'));
          if (token) {
-            const isValidToken = await validateTokenRequest(token);
+            const isValidToken = await validateTokenRequest();
             setUser(isValidToken.data[0])
             setIsAuthenticated(true);
             return true

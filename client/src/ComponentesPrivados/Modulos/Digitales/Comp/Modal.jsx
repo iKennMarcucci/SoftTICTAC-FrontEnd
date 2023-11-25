@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import Select from 'react-select';
 import { useDigitales } from '../../../../Contextos/ModuleContexts/DigitalesContext';
+import Alert from '../../../../Alertas/Alert';
 
 function Modal({ isOpen, closeModal }) {
    const [selectedFile, setSelectedFile] = useState(null);
    const [selectedName, setSelectedName] = useState("");
    const [selectedEje, setSelectedEje] = useState('');
    const [estadoCheckbox, setEstadoCheckbox] = useState(false);
+   const [alert, setAlert] = useState(null);
 
    const handleCheckboxChange = () => {
       setEstadoCheckbox(!estadoCheckbox);
@@ -135,18 +137,34 @@ function Modal({ isOpen, closeModal }) {
       event.preventDefault();
       try {
          const data = {
-            url: URLInput ? event.target.url.value : null,
-            archivo: !URLInput ? selectedFile : null,
-            eje: selectedEje.value,
-            titulo: event.target.titulo.value,
-            desc: event.target.desc.value,
-            poblacion: selectedOption.map((option) => ({
+            id_linea: selectedEje.value,
+            nombre: event.target.titulo.value,
+            descripcion: event.target.desc.value,
+            id_poblacion: JSON.stringify(selectedOption.map((option) => ({
                id: option.value,
-            })),
-            estado: estadoCheckbox,
+            }))),
+            visibilidad: estadoCheckbox,
          };
 
+         if (URLInput) {
+            data.url = event.target.url.value
+         } else {
+            data.archivo = selectedFile
+         }
+
          const response = await sendContenidos(data)
+         console.log(response);
+         if (response.status === 200) {
+            setAlert({
+               title: 'Contenido Digital Creado',
+               desc: 'Has creado un contenido digital. Espera a que el Líder PPT lo revise y decida su publicación, o te proporcione retroalimentación.',
+               bg_color: 'bg-green-100',
+               border_color: 'border-green-500',
+               text_color: 'text-green-900',
+               svg_color: 'text-green-500',
+               bar_color: 'bg-green-500',
+            })
+         }
 
       } catch (error) {
          console.error(error);
@@ -164,8 +182,25 @@ function Modal({ isOpen, closeModal }) {
       }),
    };
 
+
    return isOpen && (
       <div className="fixed inset-0 overflow-y-auto">
+         {
+            alert && (
+               <Alert
+                  msg={{
+                     title: alert.title,
+                     desc: alert.desc,
+                     bg_color: alert.bg_color,
+                     border_color: alert.border_color,
+                     text_color: alert.text_color,
+                     svg_color: alert.svg_color,
+                     bar_color: alert.bar_color,
+                  }}
+                  onClick={() => setAlert(null)}
+               />
+            )
+         }
          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <>
                <div

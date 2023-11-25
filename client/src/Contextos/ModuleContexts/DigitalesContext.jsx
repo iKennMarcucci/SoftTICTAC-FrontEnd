@@ -144,17 +144,22 @@ const DigitalesContextProvider = ({ children }) => {
    const [digitales, setDigitales] = useState(null)
 
    const getDigitales = async () => {
-      const res = await getContenidosRequest()  // Por el momento no existen contenidos digitales
-      console.log(res.data);
+      const res = await getContenidosRequest()
       setDigitales(estructura)
    }
 
    const sendContenidos = async (body) => {
-      const token = JSON.parse(localStorage.getItem('access'));
-      if (token) {
+      try {
          console.log("body", body);
-         const res = await sendContenidosRequest(body, token)
-         console.log("res", res);
+         const token = JSON.parse(localStorage.getItem('access'))
+         if (token) {
+            const res = await sendContenidosRequest(body, token)
+            await getDigitales()
+            return { status: 200 }
+         }
+         return { status: 400 }
+      } catch (error) {
+         console.error(error);
       }
    }
 
