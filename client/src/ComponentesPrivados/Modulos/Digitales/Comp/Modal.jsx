@@ -4,11 +4,105 @@ import Select from 'react-select';
 function Modal({ isOpen, closeModal }) {
    const [selectedFile, setSelectedFile] = useState(null);
    const [selectedName, setSelectedName] = useState("");
+   const [selectedEje, setSelectedEje] = useState('');
    const [estadoCheckbox, setEstadoCheckbox] = useState(false);
 
    const handleCheckboxChange = () => {
       setEstadoCheckbox(!estadoCheckbox);
    };
+
+   const ejes = [
+      {
+         value: 1,
+         label: "Emprendimiento",
+         competencias: [
+            {
+               value: 1,
+               label: "Participa activamente en los ámbitos sociales e interpersonales, manifestando solidaridad e interés por la comunidad."
+            },
+            {
+               value: 2,
+               label: "Capacidad de comunicarse constructivamente."
+            },
+            {
+               value: 3,
+               label: "Conoce y aplica las normas de tránsito y seguridad vial."
+            }
+         ]
+      },
+      {
+         value: 2,
+         label: "Sexualidad",
+         competencias: [
+            {
+               value: 1,
+               label: "Comprende los aspectos de la sexualidad humana, sus transiciones e implicaciones en la vida cotidiana."
+            },
+            {
+               value: 2,
+               label: "Identifica la diversidad que existe en los seres humanos y sus formas de expresarla."
+            },
+            {
+               value: 3,
+               label: "Toma decisiones centradas en el enfoque de derechos sexuales y reproductivos."
+            }
+         ]
+      },
+      {
+         value: 3,
+         label: "Medio Ambiente",
+         competencias: [
+            {
+               value: 1,
+               label: "Comprende los procesos de cuidado y protección del medio ambiente."
+            },
+            {
+               value: 2,
+               label: "Cuida y protege el medio ambiente."
+            },
+            {
+               value: 3,
+               label: "Promueve en su comunidad el cuidado y protección del medio ambiente."
+            }
+         ]
+      },
+      {
+         value: 4,
+         label: "Relaciones Sociales",
+         competencias: [
+            {
+               value: 1,
+               label: "Desarrolla pensamiento emprendedor en el ser, sentir, pensar y actuar."
+            },
+            {
+               value: 2,
+               label: "Desarrolla hábitos y valores emprendedores que orienten el comportamiento para el éxito personal."
+            },
+            {
+               value: 3,
+               label: "Tiene capacidad para entender el entorno socioeconómico en su contexto."
+            }
+         ]
+      },
+      {
+         value: 5,
+         label: "TICS",
+         competencias: [
+            {
+               value: 1,
+               label: "Comprende que las TIC facilitan responder a problemas de su entorno y se deben utilizar de manera responsable."
+            },
+            {
+               value: 2,
+               label: "Integra las TIC en el desarrollo de las actividades académicas y cotidianas para facilitar y agilizar los procesos operativos en los diferentes contextos."
+            },
+            {
+               value: 3,
+               label: "Construye soluciones a problemas del contexto usando las TIC."
+            }
+         ]
+      },
+   ]
 
    const handleFileChange = (event) => {
       const file = event.target.files[0];
@@ -38,12 +132,16 @@ function Modal({ isOpen, closeModal }) {
       event.preventDefault();
       try {
          const data = {
-            contenido: URLInput ? event.target.url.value : selectedFile,
+            url: URLInput ? event.target.url.value : null,
+            archivo: !URLInput ? selectedFile : null,
+            eje: selectedEje.value,
             titulo: event.target.titulo.value,
             desc: event.target.desc.value,
-            poblacion: selectedOption.value,
+            poblacion: selectedOption.map((option) => ({
+               id: option.value,
+            })),
             estado: estadoCheckbox,
-         }
+         };
          console.log(data);
       } catch (error) {
          console.error(error);
@@ -84,7 +182,7 @@ function Modal({ isOpen, closeModal }) {
                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 overflow-y-auto flex flex-col" id='Modal'>
                   <div className="radio-input">
                      <label className='p-1 px-5 max-sm:px-2'>
-                        <input type="radio" id="value-1" name="value-radio" value="value-1" className="hidden"
+                        <input type="radio" id="value-1" name="value-radio" value="value-1" className="hidden" defaultChecked={URLInput}
                            onClick={(e) => setURLInput(true)} />
                         <span className='flex font-normal'>
                            <svg
@@ -95,7 +193,7 @@ function Modal({ isOpen, closeModal }) {
                         </span>
                      </label>
                      <label className='p-1 px-5 max-sm:px-2'>
-                        <input type="radio" id="value-2" name="value-radio" value="value-2" className="hidden" defaultChecked={true}
+                        <input type="radio" id="value-2" name="value-radio" value="value-2" className="hidden" defaultChecked={!URLInput}
                            onClick={(e) => setURLInput(false)} />
                         <span className='flex font-normal'>
                            <svg
@@ -115,8 +213,8 @@ function Modal({ isOpen, closeModal }) {
                               URLInput ?
                                  <>
                                     <label htmlFor="url" className="block text-sm">URL</label>
-                                    <input type="text" name="url" id="url" className="border-delgado text-sm rounded-lg w-full p-2.5 bg-blue-50" required
-                                       placeholder='https:// https://www.ejemplo.com' />
+                                    <input type="url" name="url" id="url" className="border-delgado text-sm rounded-lg w-full p-2.5 bg-blue-50" required
+                                       placeholder='https://www.ejemplo.com' />
                                  </>
                                  :
                                  <>
@@ -137,7 +235,18 @@ function Modal({ isOpen, closeModal }) {
                                  </>
                            }
                         </div>
-
+                        <div>
+                           <label htmlFor="eje" className="block text-sm">Eje</label>
+                           <Select
+                              defaultValue={selectedEje}
+                              onChange={setSelectedEje}
+                              options={ejes}
+                              placeholder="Elige un Eje"
+                              menuPortalTarget={document.body}
+                              id='eje'
+                              styles={customStyles}
+                           />
+                        </div>
                         <div>
                            <label htmlFor="titulo" className="block text-sm">Título</label>
                            <input type="text" name="titulo" id="titulo" className="border-delgado text-sm rounded-lg w-full p-2.5 bg-blue-50" required
@@ -156,6 +265,7 @@ function Modal({ isOpen, closeModal }) {
                               options={options}
                               placeholder="Elige una población"
                               styles={customStyles}
+                              isMulti
                            />
                         </div>
 

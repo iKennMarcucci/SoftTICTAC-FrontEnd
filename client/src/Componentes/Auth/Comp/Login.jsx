@@ -58,7 +58,7 @@ function Login() {
                      onChange={handleChange} value={formData.password} />
                </div>
                <div className='text-center'>
-                  <button type="submit" className='bg-black w-full text-white py-2 rounded-lg max-sm:mb-8'>
+                  <button type="submit" className='hover:bg-blue-500 bg-blue-600 font-medium w-full text-white py-2 rounded-lg max-sm:mb-8'>
                      Ingresar
                   </button>
                </div>
