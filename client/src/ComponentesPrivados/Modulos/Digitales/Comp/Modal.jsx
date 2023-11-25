@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Select from 'react-select';
+import { useDigitales } from '../../../../Contextos/ModuleContexts/DigitalesContext';
 
 function Modal({ isOpen, closeModal }) {
    const [selectedFile, setSelectedFile] = useState(null);
@@ -128,6 +129,8 @@ function Modal({ isOpen, closeModal }) {
       },
    ];
 
+   const { sendContenidos } = useDigitales()
+
    const handleSubmit = async (event) => {
       event.preventDefault();
       try {
@@ -142,7 +145,9 @@ function Modal({ isOpen, closeModal }) {
             })),
             estado: estadoCheckbox,
          };
-         console.log(data);
+
+         const response = await sendContenidos(data)
+
       } catch (error) {
          console.error(error);
       }

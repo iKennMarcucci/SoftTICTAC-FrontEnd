@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { loginRequest, validateTokenRequest } from '../Api/Peticiones/request.axios';
 
 const AuthContext = createContext();
 
@@ -11,50 +12,65 @@ const AuthContextProvider = ({ children }) => {
    const [isAuthenticated, setIsAuthenticated] = useState(false)
    const [user, setUser] = useState(null)
 
-   const verifySession = () => {
+   const checkAuthentication = async () => {
       try {
-         const token = localStorage.getItem('token')
+         const token = JSON.parse(localStorage.getItem('access'));
          if (token) {
+            const isValidToken = await validateTokenRequest(token);
+            setUser(isValidToken.data[0])
             setIsAuthenticated(true);
-            setUser(JSON.parse(token));
-            return true;
+            return true
          }
-         return false;
+         setUser(null)
+         setIsAuthenticated(false);
+         return false
       } catch (error) {
-         console.error(error);
+         console.log(error);
       }
-   }
+   };
 
    useEffect(() => {
-      verifySession();
+      checkAuthentication();
    }, [])
 
    const login = async (body) => {
       try {
-         localStorage.setItem("token", JSON.stringify({ body }))
-         setUser(body)
-         setIsAuthenticated(true)
-         return { status: 200 }
+         const res = await loginRequest(body);
+         localStorage.clear();
+         if (res.status === 200) {
+            const now = new Date();
+            const expiry = now.getTime() + 5 * 60 * 1000; // 5 minutes
+            localStorage.setItem('access', JSON.stringify(res.data.access));
+            localStorage.setItem('refresh', JSON.stringify(res.data.refresh));
+            localStorage.setItem('timestamp', expiry.toString());
+            await checkAuthentication();
+            return { status: 200 };
+         }
+         console.log('ERROR INESPERADO:', res);
+         throw new Error('Unexpected error during login.');
       } catch (error) {
          console.error(error);
+         throw error; // Rethrow the error for the calling component to handle
       }
-   }
+   };
 
    const logout = () => {
       try {
-         localStorage.removeItem("token");
+         localStorage.removeItem('access');
+         localStorage.removeItem('refresh');
+         localStorage.removeItem('timestamp');
          setIsAuthenticated(false);
          setUser(null);
-         return { status: 200 }
+         return { status: 200 };
       } catch (error) {
          console.error(error);
+         throw error;
       }
-   }
+   };
 
    const value = {
-      login, logout, verifySession,
+      login, logout, checkAuthentication,
       user, isAuthenticated,
-
    };
 
    return (

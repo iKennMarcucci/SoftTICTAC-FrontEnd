@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import img_2 from '../../../public/Logos/SingleLogo.webp';
+import { getContenidosRequest, sendContenidosRequest } from '../../Api/Peticiones/request.axios';
 
 const DigitalesContext = createContext();
 
@@ -142,9 +143,19 @@ const DigitalesContextProvider = ({ children }) => {
 
    const [digitales, setDigitales] = useState(null)
 
-   const getDigitales = () => {
-      // Logica para la traída del backend
+   const getDigitales = async () => {
+      const res = await getContenidosRequest()  // Por el momento no existen contenidos digitales
+      console.log(res.data);
       setDigitales(estructura)
+   }
+
+   const sendContenidos = async (body) => {
+      const token = JSON.parse(localStorage.getItem('access'));
+      if (token) {
+         console.log("body", body);
+         const res = await sendContenidosRequest(body, token)
+         console.log("res", res);
+      }
    }
 
    useEffect(() => {
@@ -152,7 +163,8 @@ const DigitalesContextProvider = ({ children }) => {
    }, [])
 
    const value = {
-      digitales
+      digitales,
+      sendContenidos
    };
 
    return (

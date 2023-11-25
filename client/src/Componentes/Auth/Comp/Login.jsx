@@ -21,7 +21,7 @@ function Login() {
          }
          const res = await login(data)
          if (res.status === 200) {
-            navigate('/')
+            // navigate('/')
          }
       } catch (error) {
          console.error(error);

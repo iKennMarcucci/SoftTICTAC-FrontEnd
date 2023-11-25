@@ -3,12 +3,19 @@ import { useAuth } from "../Contextos/AuthContext";
 import { useEffect } from "react";
 
 function ProtectedRoutes() {
-   const { verifySession } = useAuth();
+   const { checkAuthentication } = useAuth();
    const navigate = useNavigate();
+   const getSession = async () => {
+      const session = await checkAuthentication()
+      if (session === false) {
+         navigate('/login');
+         return false
+      }
+      return true
+   }
 
    useEffect(() => {
-      const session = verifySession();
-      if (session === false) navigate('/login');
+      getSession()
    }, []);
 
    return (
