@@ -1,182 +1,81 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import img_2 from '../../../public/Logos/SingleLogo.webp';
-import { getContenidosRequest, sendContenidosRequest } from '../../Api/Peticiones/request.axios';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  getContenidosPendientes,
+  getContenidosRequest,
+  sendContenidosRequest,
+} from "~/Api/Peticiones/request.axios";
+import { useAuth } from "~/Contextos/AuthContext";
+import { isLider } from "~/utils/User";
 
 const DigitalesContext = createContext();
 
-export const useDigitales = () => {
-   return useContext(DigitalesContext);
-};
+export function useDigitales() {
+  const context = useContext(DigitalesContext);
+
+  if (!context) {
+    throw new Error(
+      "useDigitales debe estar dentro del proveedor DigitalesContextProvider"
+    );
+  }
+
+  return context;
+}
 
 const DigitalesContextProvider = ({ children }) => {
+  const { user } = useAuth();
 
-   const poblaciones = [
-      {
-         id: 1,
-         poblacion: "Basica Primaria",
-      },
-      {
-         id: 2,
-         poblacion: "Básica Secundaria",
-      },
-      {
-         id: 3,
-         poblacion: "Media",
-      },
-   ]
+  const [digitales, setDigitales] = useState(null);
 
-   const ejes = [
-      {
-         id: 1,
-         eje: "Emprendimiento",
-      },
-      {
-         id: 2,
-         eje: "Sexualidad",
-      },
-      {
-         id: 3,
-         eje: "Medio Ambiente",
-      },
-      {
-         id: 4,
-         eje: "Relaciones Sociales",
-      },
-      {
-         id: 5,
-         eje: "TICS",
-      },
-   ]
+  const getDigitales = useCallback(async () => {
+    if (!user) return;
 
-   const estructura = [
-      {
-         id: 1,
-         titulo: "Nombre del Primer Contenido Digital",
-         descripcion: "Soy la descripción del Primer Contenido Digital Soy la descripción del Primer Contenido Digital Soy la descripción del Primer Contenido Digital Soy la descripción del Primer Contenido Digital",
-         poblacion: poblaciones[0],
-         eje: ejes[0],
-         publico: true,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 2,
-         titulo: "Nombre del Segundo Contenido Digital",
-         descripcion: "Soy la descripción del Segundo Contenido Digital",
-         poblacion: poblaciones[1],
-         eje: ejes[1],
-         publico: false,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 3,
-         titulo: "Nombre del Tercer Contenido Digital",
-         descripcion: "Soy la descripción del Tercer Contenido Digital",
-         poblacion: poblaciones[2],
-         eje: ejes[2],
-         publico: true,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 4,
-         titulo: "Nombre del Cuarto Contenido Digital",
-         descripcion: "Soy la descripción del Cuarto Contenido Digital",
-         poblacion: poblaciones[0],
-         eje: ejes[3],
-         publico: false,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 5,
-         titulo: "Nombre del Quinto Contenido Digital",
-         descripcion: "Soy la descripción del Quinto Contenido Digital",
-         poblacion: poblaciones[1],
-         eje: ejes[4],
-         publico: true,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 6,
-         titulo: "Nombre del Sexto Contenido Digital",
-         descripcion: "Soy la descripción del Sexto Contenido Digital",
-         poblacion: poblaciones[2],
-         eje: ejes[0],
-         publico: false,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 7,
-         titulo: "Nombre del Septimo Contenido Digital",
-         descripcion: "Soy la descripción del Septimo Contenido Digital",
-         poblacion: poblaciones[0],
-         eje: ejes[1],
-         publico: true,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 8,
-         titulo: "Nombre del Octavo Contenido Digital",
-         descripcion: "Soy la descripción del Octavo Contenido Digital",
-         poblacion: poblaciones[1],
-         eje: ejes[2],
-         publico: false,
-         imagenReferencia: img_2,
-         url: ""
-      },
-      {
-         id: 9,
-         titulo: "Nombre del Noveno Contenido Digital",
-         descripcion: "Soy la descripción del Noveno Contenido Digital",
-         poblacion: poblaciones[2],
-         eje: ejes[3],
-         publico: false,
-         imagenReferencia: img_2,
-         url: ""
-      },
-   ]
+    if (isLider(user)) {
+      const res = await getContenidosPendientes();
+      setDigitales(res.data);
+      return;
+    }
 
-   const [digitales, setDigitales] = useState(null)
+    const res = await getContenidosRequest();
+    setDigitales(res.data);
+  }, [user]);
 
-   const getDigitales = async () => {
-      const res = await getContenidosRequest()
-      setDigitales(estructura)
-   }
+  const sendContenidos = async (body) => {
+    try {
+      const token = localStorage.getItem("access");
 
-   const sendContenidos = async (body) => {
-      try {
-         console.log("body", body);
-         const token = JSON.parse(localStorage.getItem('access'))
-         if (token) {
-            const res = await sendContenidosRequest(body, token)
-            await getDigitales()
-            return { status: 200 }
-         }
-         return { status: 400 }
-      } catch (error) {
-         console.error(error);
+      if (token) {
+        const res = await sendContenidosRequest(body, token);
+        await getDigitales();
+        return { status: 200 };
       }
-   }
 
-   useEffect(() => {
-      getDigitales()
-   }, [])
+      return { status: 400 };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-   const value = {
-      digitales,
-      sendContenidos
-   };
+  useEffect(() => {
+    getDigitales();
+  }, [getDigitales]);
 
-   return (
-      <DigitalesContext.Provider value={value}>
-         {children}
-      </DigitalesContext.Provider>
-   );
+  const value = {
+    digitales,
+    sendContenidos,
+  };
+
+  return (
+    <DigitalesContext.Provider value={value}>
+      {children}
+    </DigitalesContext.Provider>
+  );
 };
 
-export default DigitalesContextProvider
+export default DigitalesContextProvider;
