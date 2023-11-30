@@ -17,15 +17,44 @@ export const sendContenidosRequest = (body) =>
 export const getHerramientasRequest = () =>
   backendAPI.get(endpoints.PUBLIC_HERRAMIENTAS);
 
+/**
+ * Consulta las herramientas pendientes de revisión por el líder PPT
+ * @returns
+ */
 export function getHerramientasPendientes() {
   return backendAPI.get(
-    `${endpoints.PRIVATE_HERRAMIENTAS}?estado=${Status.PENDIENTE}`
+    `${endpoints.PRIVATE_HERRAMIENTAS}/?estado=${Status.PENDIENTE}`
   );
 }
 
 export const sendHerramientasRequest = (body) => {
   return backendAPI.post(endpoints.CREATE_HERRAMIENTAS, body);
 };
+
+/**
+ * Aprobación de una herramienta por parte del líder PPT
+ * @param {number} id de la herramienta a aprobar
+ * @returns
+ */
+export function approveHerramienta(id) {
+  return backendAPI.patch(`${endpoints.PRIVATE_HERRAMIENTAS}/${id}/`, {
+    estado: "Aprobado",
+    revision: "Aprobado",
+  });
+}
+
+/**
+ * Rechazo de una herramienta por parte del líder PPT
+ * @param {number} id de la herramienta a aprobar
+ * @param {string} recomendación del líder PPT
+ * @returns
+ */
+export function rejectHerramienta(id, recomendacion) {
+  return backendAPI.patch(`${endpoints.PRIVATE_HERRAMIENTAS}/${id}/`, {
+    estado: "Rechazado",
+    revision: recomendacion,
+  });
+}
 
 // Items Shared
 export const getEjesRequest = () => backendAPI.get(endpoints.GET_EJES);

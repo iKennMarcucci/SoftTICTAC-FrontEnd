@@ -1,4 +1,9 @@
+import { useRef } from "react";
+
+import * as requests from "@/Api/Peticiones/request.axios";
+import { useAuth } from "@/Contextos/AuthContext";
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
+import { isLider } from "@/utils/User";
 
 const calcularTiempo = (tiempoMilis) => {
   const horas = Math.floor(tiempoMilis / (1000 * 60 * 60));
@@ -18,37 +23,55 @@ const calcularTiempo = (tiempoMilis) => {
 const calcularDuracionTotal = (procesos = []) => {
   const total = procesos.reduce(
     (accumulator, current) => current.tiempo + accumulator,
-    0
+    0,
   );
 
   return calcularTiempo(total);
 };
 
 function HerramientaDetails({ herramienta, onClose }) {
+  const { user } = useAuth();
   const { ejes } = useHerramienta();
+
+  const textarea = useRef(null);
 
   const eje = ejes.find((eje) => eje.value === herramienta.id_tema.id_linea);
 
+  function handleApprove() {
+    requests
+      .approveHerramienta(herramienta.id)
+      .then(() => {
+        alert("Herramienta aprobada");
+        onClose();
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Ocurrió un error al aprobar la herramienta");
+      });
+  }
+
+  function handleReject() {}
+
   return (
     <div className="fixed inset-0 overflow-y-auto">
-      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" onClick={onClose}>
           <div className="absolute inset-0 bg-gray-500 opacity-75" />
         </div>
 
         <span
-          className="hidden sm:inline-block sm:align-middle sm:h-screen"
+          className="hidden sm:inline-block sm:h-screen sm:align-middle"
           aria-hidden="true"
         >
           &#8203;
         </span>
 
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-5xl sm:w-full">
+        <div className="inline-block max-w-5xl transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:align-middle">
           {/* Contenido del modal */}
-          <h4 className="font-medium text-center text-2xl my-4">
+          <h4 className="my-4 text-center text-2xl font-medium">
             Herramienta {herramienta.id} - {herramienta.nombre}
           </h4>
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 whitespace-normal overflow-y-auto max-h-modal">
+          <div className="max-h-modal overflow-y-auto whitespace-normal bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <table>
               <tbody>
                 <tr>
@@ -87,7 +110,7 @@ function HerramientaDetails({ herramienta, onClose }) {
                   <td className="flex flex-col px-4 text-justify">
                     {herramienta.id_tema.id_competencia.map((competencia) => {
                       const { label } = eje.competencias.find(
-                        (iterator) => iterator.value
+                        (iterator) => iterator.value,
                       );
 
                       return <p key={competencia.id}>• {label}</p>;
@@ -103,7 +126,7 @@ function HerramientaDetails({ herramienta, onClose }) {
                 <h5 className="font-normal">
                   • Primer Momento - Presentación:
                 </h5>
-                <p className="text-justify px-4">
+                <p className="px-4 text-justify">
                   {herramienta.momentos[0].descripcion}
                 </p>
               </div>
@@ -142,7 +165,7 @@ function HerramientaDetails({ herramienta, onClose }) {
 
             <div>
               <h5 className="font-normal">• Tercer Momento - Cierre:</h5>
-              <p className="text-justify px-4">
+              <p className="px-4 text-justify">
                 {herramienta.momentos[2].descripcion}
               </p>
             </div>
@@ -153,24 +176,40 @@ function HerramientaDetails({ herramienta, onClose }) {
                 {calcularDuracionTotal(herramienta.momentos[1].procesos)}
               </p>
             </div>
-
-            {/* <table className="w-full">
-              <tbody>
-                <tr className="border-delgado">
-                  <td className="border-delgado px-2">Recomendaciones</td>
-                  <td className="px-2 text-justify">
-                    <p>• {herramienta.recomendacion}</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table> */}
           </div>
 
+          {isLider(user) && (
+            <>
+              <div className="mb-4 w-full px-6">
+                <textarea
+                  className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  placeholder="Recomendaciones"
+                  ref={textarea}
+                />
+              </div>
+
+              <div className="flex w-full justify-center gap-2">
+                <button
+                  className="rounded-md  bg-green-600 px-4 py-2 font-medium text-white"
+                  onClick={handleApprove}
+                >
+                  Aprobar
+                </button>
+                <button
+                  className="rounded-md bg-red-600 px-4 py-2 font-medium text-white"
+                  onClick={handleReject}
+                >
+                  Rechazar
+                </button>
+              </div>
+            </>
+          )}
+
           {/* Botones del modal */}
-          <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <button
               type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 hover:bg-blue-500 bg-blue-600 text-base text-white font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+              className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={onClose}
             >
               Cerrar

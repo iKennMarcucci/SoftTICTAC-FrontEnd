@@ -13,6 +13,8 @@ import { useAuth } from "./Contextos/AuthContext";
 import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes";
 import HerramientasControl from "./ComponentesPrivados/Modulos/Herramientas/HerramientasControl";
 import DigitalesControl from "./ComponentesPrivados/Modulos/Digitales/DigitalesControl";
+import HerramientasContextProvider from "./Contextos/ModuleContexts/HerramientasContext";
+import DigitalesContextProvider from "./Contextos/ModuleContexts/DigitalesContext";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -35,8 +37,22 @@ function App() {
 
         <Route element={<ProtectedRoutes />}>
           <Route path="/controlpanel" element={<Control />}>
-            <Route path="herramientas" element={<HerramientasControl />} />
-            <Route path="contenidos-digitales" element={<DigitalesControl />} />
+            <Route
+              path="herramientas"
+              element={
+                <HerramientasContextProvider>
+                  <HerramientasControl />
+                </HerramientasContextProvider>
+              }
+            />
+            <Route
+              path="contenidos-digitales"
+              element={
+                <DigitalesContextProvider>
+                  <DigitalesControl />
+                </DigitalesContextProvider>
+              }
+            />
           </Route>
         </Route>
 
