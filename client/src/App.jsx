@@ -1,45 +1,50 @@
-import { Navigate, Route, Routes } from "react-router-dom"
-import Navbar from "./Componentes/Navbar"
-import Footer from "./Componentes/Footer"
-import Home from "./Componentes/Home/Home"
-import Auth from "./Componentes/Auth/Auth"
-import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes"
-import { useAuth } from "./Contextos/AuthContext"
-import Digitales from "./Componentes/Modulos/Digitales/Digitales"
-import Herramientas from "./Componentes/Modulos/Herramientas/Herramientas"
-import Control from "./ComponentesPrivados/Home/Control"
-import Dashboard from "./ComponentesPrivados/Dashboard"
-import { RecoilRoot } from 'recoil';
+import { Navigate, Route, Routes } from "react-router-dom";
+import { RecoilRoot } from "recoil";
+
+import Auth from "./Componentes/Auth/Auth";
+import Footer from "./Componentes/Footer";
+import Home from "./Componentes/Home/Home";
+import Digitales from "./Componentes/Modulos/Digitales/Digitales";
+import Herramientas from "./Componentes/Modulos/Herramientas/Herramientas";
+import Navbar from "./Componentes/Navbar";
+import Dashboard from "./ComponentesPrivados/Dashboard";
+import Control from "./ComponentesPrivados/Home/Control";
+import { useAuth } from "./Contextos/AuthContext";
+import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes";
+import HerramientasControl from "./ComponentesPrivados/Modulos/Herramientas/HerramientasControl";
+import DigitalesControl from "./ComponentesPrivados/Modulos/Digitales/DigitalesControl";
 
 function App() {
+  const { isAuthenticated } = useAuth();
 
-   const { isAuthenticated } = useAuth()
+  return (
+    <RecoilRoot>
+      <Navbar />
+      <Dashboard />
+      <Routes>
+        <Route path={"/"} element={<Home />} />
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/" /> : <Auth />}
+        />
+        <Route path="/modulo/contenidos-digitales" element={<Digitales />} />
+        <Route
+          path="/modulo/herramientas-pedagogicas"
+          element={<Herramientas />}
+        />
 
-   return (
-      <>
-         <RecoilRoot>
-            <Navbar />
-            <Dashboard />
-            <Routes>
-               <Route path={'/'} element={<Home />} />
-               <Route path='/login' element={isAuthenticated ? <Navigate to="/" /> : <Auth />} />
-               <Route path='/modulo/contenidos-digitales' element={<Digitales />} />
-               <Route path='/modulo/herramientas-pedagogicas' element={<Herramientas />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/controlpanel" element={<Control />}>
+            <Route path="herramientas" element={<HerramientasControl />} />
+            <Route path="contenidos-digitales" element={<DigitalesControl />} />
+          </Route>
+        </Route>
 
-
-               <Route element={<ProtectedRoutes />}>
-                  <Route path='/controlpanel' element={<Control />} />
-                  <Route path='/controlpanel/herramientas' element={<Control />} />
-                  <Route path='/controlpanel/contenidos-digitales' element={<Control />} />
-               </Route>
-
-
-               <Route path={'*'} element={'No encontrado'} />
-            </Routes>
-            <Footer />
-         </RecoilRoot>
-      </>
-   )
+        <Route path={"*"} element={"No encontrado"} />
+      </Routes>
+      <Footer />
+    </RecoilRoot>
+  );
 }
 
-export default App
+export default App;

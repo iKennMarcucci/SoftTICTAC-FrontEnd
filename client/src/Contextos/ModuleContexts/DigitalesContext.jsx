@@ -10,9 +10,9 @@ import {
   getContenidosPendientes,
   getContenidosRequest,
   sendContenidosRequest,
-} from "~/Api/Peticiones/request.axios";
-import { useAuth } from "~/Contextos/AuthContext";
-import { isLider } from "~/utils/User";
+} from "@/Api/Peticiones/request.axios";
+import { useAuth } from "@/Contextos/AuthContext";
+import { isLider } from "@/utils/User";
 
 const DigitalesContext = createContext();
 

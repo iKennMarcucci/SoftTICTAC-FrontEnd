@@ -1,19 +1,11 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { isOpenState } from "../../Contextos/RecoilState";
-import { useLocation } from "react-router-dom";
-import HerramientasControl from "../Modulos/Herramientas/HerramientasControl";
-import DigitalesControl from "../Modulos/Digitales/DigitalesControl";
+
+import { isOpenState } from "@/Contextos/RecoilState";
 
 function Control() {
   const isOpen = useRecoilValue(isOpenState);
-  const location = useLocation();
-  const showHerramientas = location.pathname.startsWith(
-    "/controlpanel/herramientas"
-  );
-  const showDigitales = location.pathname.startsWith(
-    "/controlpanel/contenidos-digitales"
-  );
+
   return (
     <div
       className={`mt-24 flex-1 transition-all duration-300 ${
@@ -21,11 +13,7 @@ function Control() {
       }`}
     >
       <div className="p-4">
-        {showHerramientas ? (
-          <HerramientasControl />
-        ) : (
-          showDigitales && <DigitalesControl />
-        )}
+        <Outlet />
       </div>
     </div>
   );

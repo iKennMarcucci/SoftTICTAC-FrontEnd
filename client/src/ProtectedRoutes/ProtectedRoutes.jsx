@@ -1,26 +1,28 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../Contextos/AuthContext";
 import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../Contextos/AuthContext";
 
 function ProtectedRoutes() {
-   const { checkAuthentication } = useAuth();
-   const navigate = useNavigate();
-   const getSession = async () => {
-      const session = await checkAuthentication()
-      if (session === false) {
-         navigate('/login');
-         return false
+  const { checkAuthentication } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getSession() {
+      const session = await checkAuthentication();
+
+      if (session) {
+        return true;
       }
-      return true
-   }
 
-   useEffect(() => {
-      getSession()
-   }, []);
+      navigate("/login");
+      return false;
+    }
 
-   return (
-      <Outlet />
-   );
+    getSession();
+  }, [checkAuthentication, navigate]);
+
+  return <Outlet />;
 }
 
 export default ProtectedRoutes;

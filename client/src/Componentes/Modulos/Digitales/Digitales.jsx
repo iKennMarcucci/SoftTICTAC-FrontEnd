@@ -1,4 +1,4 @@
-import { useDigitales } from "~/Contextos/ModuleContexts/DigitalesContext";
+import { useDigitales } from "@/Contextos/ModuleContexts/DigitalesContext";
 
 function Digitales() {
   const { digitales } = useDigitales();

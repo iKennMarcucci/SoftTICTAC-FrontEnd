@@ -1,57 +1,130 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Select from "react-select";
 
-function Modal({ isOpen, closeModal }) {
-  const [selectedOption, setSelectedOption] = useState("");
-  const [selectedCompe, setSelectedCompe] = useState("");
-  const [selectedEje, setSelectedEje] = useState("");
-  const [estadoCheckbox, setEstadoCheckbox] = useState(false);
+import { sendHerramientasRequest } from "@/Api/Peticiones/request.axios";
+import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
+
+const poblaciones = [
+  {
+    value: 1,
+    label: "Basica Primaria",
+  },
+  {
+    value: 2,
+    label: "Básica Secundaria",
+  },
+  {
+    value: 3,
+    label: "Media",
+  },
+];
+
+const MINUTES_MULTIPLIER = 5;
+
+const tiempoOptions = [
+  {
+    value: 1,
+    label: "5",
+  },
+  {
+    value: 2,
+    label: "10",
+  },
+  {
+    value: 3,
+    label: "15",
+  },
+  {
+    value: 4,
+    label: "20",
+  },
+  {
+    value: 5,
+    label: "25",
+  },
+  {
+    value: 6,
+    label: "30",
+  },
+];
+
+const initialRecursos = [
+  {
+    value: 1,
+    label: "Crayones, Colores y Marcadores",
+  },
+  {
+    value: 2,
+    label: "Pliego de Cartulina",
+  },
+  {
+    value: 3,
+    label: "Pegante y Tijeras",
+  },
+  {
+    value: 4,
+    label: "Periódicos y Revistas",
+  },
+  {
+    value: 5,
+    label: "Plastilina",
+  },
+  {
+    value: 6,
+    label: "Pinceles y Pinturas",
+  },
+  {
+    value: 7,
+    label: "Papel Seda",
+  },
+  {
+    value: 8,
+    label: "Proyector y Sonido",
+  },
+  {
+    value: 9,
+    label: "Computadora Portatil",
+  },
+  {
+    value: 10,
+    label: "Palitos de Helado",
+  },
+];
+
+/**
+ *
+ * @param {object} props
+ * @param {boolean} props.isOpen
+ * @param {() => void} props.onClose
+ * @returns
+ */
+function ModalCreateHerramienta({ isOpen, onClose }) {
+  const { ejes } = useHerramienta();
+
+  const [poblacion, setPoblacion] = useState("");
+  const [competencias, setCompetencias] = useState([]);
+  const [selectedEje, setSelectedEje] = useState({
+    value: 0,
+    label: "Seleccione un eje",
+    competencias: [],
+  });
+  const [esPublico, setEsPublico] = useState(false);
   const [nuevoRecurso, setNuevoRecurso] = useState("");
-  const [recursos, setRecursos] = useState([
+  const [recursos, setRecursos] = useState(initialRecursos);
+
+  const [actividades, setActividades] = useState([
     {
-      value: 1,
-      label: "Crayones, Colores y Marcadores",
-    },
-    {
-      value: 2,
-      label: "Pliego de Cartulina",
-    },
-    {
-      value: 3,
-      label: "Pegante y Tijeras",
-    },
-    {
-      value: 4,
-      label: "Periódicos y Revistas",
-    },
-    {
-      value: 5,
-      label: "Plastilina",
-    },
-    {
-      value: 6,
-      label: "Pinceles y Pinturas",
-    },
-    {
-      value: 7,
-      label: "Papel Seda",
-    },
-    {
-      value: 8,
-      label: "Proyector y Sonido",
-    },
-    {
-      value: 9,
-      label: "Computadora Portatil",
-    },
-    {
-      value: 10,
-      label: "Palitos de Helado",
+      proceso: "",
+      recursos: [],
+      tiempo: {
+        label: "",
+        value: 0,
+      },
     },
   ]);
 
   const handleCheckboxChange = () => {
-    setEstadoCheckbox(!estadoCheckbox);
+    setEsPublico(!esPublico);
   };
 
   const handleRecursoChange = (event) => {
@@ -59,229 +132,123 @@ function Modal({ isOpen, closeModal }) {
   };
 
   const handleAgregarRecurso = () => {
-    if (nuevoRecurso.trim() !== "") {
-      // Verificar si el recurso ya está en la lista para evitar duplicados
-      if (!recursos.some((recurso) => recurso.label === nuevoRecurso)) {
-        setRecursos([...recursos, { label: nuevoRecurso }]);
-        setNuevoRecurso("");
-      } else {
-        alert("El recurso ya está en la lista.");
-      }
-    } else {
+    if (nuevoRecurso.trim() === "") {
       alert("Por favor, ingresa un nombre de recurso válido.");
+      return;
     }
+
+    if (
+      recursos.some(
+        (recurso) =>
+          recurso.label.toLocaleLowerCase() === nuevoRecurso.toLocaleLowerCase()
+      )
+    ) {
+      alert("El recurso ya está en la lista.");
+      return;
+    }
+
+    setRecursos((prev) => [
+      ...prev,
+      { label: nuevoRecurso, value: prev.length },
+    ]);
+    setNuevoRecurso("");
   };
 
-  const [filas, setFilas] = useState([
-    {
-      proceso: "",
-      recurso: "",
-      tiempo: "",
-    },
-  ]);
-
   const handleAgregarFila = () => {
-    setFilas([...filas, { proceso: "", recurso: "", tiempo: "" }]);
+    setActividades([...actividades, { proceso: "", recursos: [], tiempo: 0 }]);
   };
 
   const handleEliminarFila = () => {
-    if (filas.length > 1) {
-      const nuevasFilas = [...filas];
-      nuevasFilas.pop(); // Elimina la última fila
-      setFilas(nuevasFilas);
-    }
+    setActividades((prev) => prev.slice(0, -1));
   };
 
   const handleSelectMinutosChange = (index, selectedMinutos) => {
-    const nuevasFilas = [...filas];
-    nuevasFilas[index].tiempo = selectedMinutos;
-    setFilas(nuevasFilas);
+    const newState = [...actividades];
+
+    newState[index] = {
+      ...newState[index],
+      tiempo: selectedMinutos,
+    };
+
+    setActividades(newState);
   };
 
   const handleSelectRecursoChange = (index, selectedOption) => {
-    const nuevasFilas = [...filas];
-    nuevasFilas[index].recurso = selectedOption;
-    setFilas(nuevasFilas);
+    const newState = [...actividades];
+
+    newState[index] = {
+      ...newState[index],
+      recursos: selectedOption,
+    };
+
+    setActividades(newState);
   };
 
   const handleInputChange = (index, campo, valor) => {
-    const nuevasFilas = [...filas];
-    nuevasFilas[index][campo] = valor;
-    setFilas(nuevasFilas);
+    const newState = [...actividades];
+
+    newState[index] = {
+      ...newState[index],
+      [campo]: valor,
+    };
+
+    setActividades(newState);
   };
-
-  const options = [
-    {
-      value: 1,
-      label: "Basica Primaria",
-    },
-    {
-      value: 2,
-      label: "Básica Secundaria",
-    },
-    {
-      value: 3,
-      label: "Media",
-    },
-  ];
-
-  const ejes = [
-    {
-      value: 1,
-      label: "Emprendimiento",
-      competencias: [
-        {
-          value: 1,
-          label:
-            "Participa activamente en los ámbitos sociales e interpersonales, manifestando solidaridad e interés por la comunidad.",
-        },
-        {
-          value: 2,
-          label: "Capacidad de comunicarse constructivamente.",
-        },
-        {
-          value: 3,
-          label: "Conoce y aplica las normas de tránsito y seguridad vial.",
-        },
-      ],
-    },
-    {
-      value: 2,
-      label: "Sexualidad",
-      competencias: [
-        {
-          value: 1,
-          label:
-            "Comprende los aspectos de la sexualidad humana, sus transiciones e implicaciones en la vida cotidiana.",
-        },
-        {
-          value: 2,
-          label:
-            "Identifica la diversidad que existe en los seres humanos y sus formas de expresarla.",
-        },
-        {
-          value: 3,
-          label:
-            "Toma decisiones centradas en el enfoque de derechos sexuales y reproductivos.",
-        },
-      ],
-    },
-    {
-      value: 3,
-      label: "Medio Ambiente",
-      competencias: [
-        {
-          value: 1,
-          label:
-            "Comprende los procesos de cuidado y protección del medio ambiente.",
-        },
-        {
-          value: 2,
-          label: "Cuida y protege el medio ambiente.",
-        },
-        {
-          value: 3,
-          label:
-            "Promueve en su comunidad el cuidado y protección del medio ambiente.",
-        },
-      ],
-    },
-    {
-      value: 4,
-      label: "Relaciones Sociales",
-      competencias: [
-        {
-          value: 1,
-          label:
-            "Desarrolla pensamiento emprendedor en el ser, sentir, pensar y actuar.",
-        },
-        {
-          value: 2,
-          label:
-            "Desarrolla hábitos y valores emprendedores que orienten el comportamiento para el éxito personal.",
-        },
-        {
-          value: 3,
-          label:
-            "Tiene capacidad para entender el entorno socioeconómico en su contexto.",
-        },
-      ],
-    },
-    {
-      value: 5,
-      label: "TICS",
-      competencias: [
-        {
-          value: 1,
-          label:
-            "Comprende que las TIC facilitan responder a problemas de su entorno y se deben utilizar de manera responsable.",
-        },
-        {
-          value: 2,
-          label:
-            "Integra las TIC en el desarrollo de las actividades académicas y cotidianas para facilitar y agilizar los procesos operativos en los diferentes contextos.",
-        },
-        {
-          value: 3,
-          label:
-            "Construye soluciones a problemas del contexto usando las TIC.",
-        },
-      ],
-    },
-  ];
-
-  const tiempoOptions = [
-    {
-      value: 1,
-      label: "5",
-    },
-    {
-      value: 2,
-      label: "10",
-    },
-    {
-      value: 3,
-      label: "15",
-    },
-    {
-      value: 4,
-      label: "20",
-    },
-    {
-      value: 5,
-      label: "25",
-    },
-    {
-      value: 6,
-      label: "30",
-    },
-  ];
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      console.log(event);
-      console.log(filas);
-      console.log(new FormData(event.target).entries());
 
+    try {
       const values = Object.fromEntries(new FormData(event.target).entries());
-      console.log(values);
+
+      const duracion = actividades.reduce((accumulator, current) => {
+        const milliseconds =
+          current.tiempo.value * MINUTES_MULTIPLIER * 60 * 1000;
+
+        return accumulator + milliseconds;
+      }, 0);
 
       const data = {
-        titulo: event.target.nombre.value,
-        poblacion: selectedOption,
-        eje: selectedEje,
-        tema: event.target.tema.value,
-        objetivo: event.target.objetivo.value,
-        competencias: selectedCompe,
-        momentos: {
-          presentacion: event.target.presentacion.value,
-          desarrollo: filas,
-          cierre: event.target.cierre.value,
+        tema: {
+          nombre: values.tema,
+          id_competencia: competencias.map((item) => ({ id: item.value })),
+          id_linea: selectedEje.value,
         },
-        publico: estadoCheckbox,
+        herramienta: {
+          nombre: values.nombre,
+          objetivo: values.objetivo,
+          recomendacion: "No aplica",
+          visibilidad: esPublico,
+          id_poblacion: poblacion.map((item) => ({ id: item.value })),
+          duracion,
+        },
+        momentos: [
+          {
+            nombre: "Presentación",
+            descripcion: values.presentacion,
+          },
+          {
+            nombre: "Desarrollo",
+            descripcion: "Explicación de desarrollo",
+            procesos: actividades.map((actividad) => ({
+              descripcion: actividad.proceso,
+              recurso: actividad.recursos
+                .map((recurso) => recurso.label)
+                .join(","),
+
+              tiempo:
+                Number(actividad.tiempo.value) * MINUTES_MULTIPLIER * 60 * 1000,
+            })),
+          },
+          {
+            nombre: "Cierre",
+            descripcion: values.cierre,
+          },
+        ],
       };
-      console.log(data);
+
+      sendHerramientasRequest(data);
+      onClose();
     } catch (error) {
       console.error(error);
     }
@@ -321,10 +288,7 @@ function Modal({ isOpen, closeModal }) {
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <>
-            <div
-              className="fixed inset-0 transition-opacity"
-              onClick={closeModal}
-            >
+            <div className="fixed inset-0 transition-opacity" onClick={onClose}>
               <div className="absolute inset-0 bg-gray-500 opacity-75" />
             </div>
             <span
@@ -382,9 +346,9 @@ function Modal({ isOpen, closeModal }) {
                       Población Objetivo
                     </label>
                     <Select
-                      defaultValue={selectedOption}
-                      onChange={setSelectedOption}
-                      options={options}
+                      defaultValue={poblacion}
+                      onChange={setPoblacion}
+                      options={poblaciones}
                       placeholder="Elige una población"
                       menuPortalTarget={document.body}
                       id="poblacion"
@@ -423,8 +387,8 @@ function Modal({ isOpen, closeModal }) {
                       Competencias
                     </label>
                     <Select
-                      defaultValue={selectedCompe}
-                      onChange={setSelectedCompe}
+                      defaultValue={competencias}
+                      onChange={setCompetencias}
                       options={selectedEje.competencias}
                       placeholder="Elige las competencias a desarrollar"
                       menuPortalTarget={document.body}
@@ -505,12 +469,12 @@ function Modal({ isOpen, closeModal }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {filas.map((fila, index) => (
+                        {actividades.map((actividad, index) => (
                           <tr key={index} className="border-delgado">
                             <td className="border-delgado px-2 pt-2 text-justify">
                               <textarea
                                 name="proceso"
-                                value={fila.proceso}
+                                value={actividad.proceso}
                                 onChange={(e) =>
                                   handleInputChange(
                                     index,
@@ -525,7 +489,7 @@ function Modal({ isOpen, closeModal }) {
                             </td>
                             <td className="text-start px-2 border-delgado-r">
                               <Select
-                                value={fila.recurso}
+                                value={actividad.recursos}
                                 onChange={(selectedOption) =>
                                   handleSelectRecursoChange(
                                     index,
@@ -542,7 +506,7 @@ function Modal({ isOpen, closeModal }) {
                             </td>
                             <td className="text-start px-2">
                               <Select
-                                value={fila.tiempo}
+                                value={actividad.tiempo}
                                 onChange={(selectedMinutos) =>
                                   handleSelectMinutosChange(
                                     index,
@@ -618,7 +582,7 @@ function Modal({ isOpen, closeModal }) {
                         className="cyberpunk-checkbox"
                         id="estado"
                         name="estado"
-                        checked={estadoCheckbox}
+                        checked={esPublico}
                         onChange={handleCheckboxChange}
                       />
                       Público
@@ -642,7 +606,7 @@ function Modal({ isOpen, closeModal }) {
               <button
                 type="button"
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 hover:bg-blue-500 bg-blue-600 text-white font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                onClick={closeModal}
+                onClick={onClose}
               >
                 Cerrar
               </button>
@@ -654,4 +618,4 @@ function Modal({ isOpen, closeModal }) {
   );
 }
 
-export default Modal;
+export default ModalCreateHerramienta;

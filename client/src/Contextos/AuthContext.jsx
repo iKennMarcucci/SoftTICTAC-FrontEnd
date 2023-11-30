@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 import {
   loginRequest,
@@ -23,7 +29,7 @@ const AuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
 
-  const checkAuthentication = async () => {
+  const checkAuthentication = useCallback(async function checkAuthentication() {
     try {
       const token = localStorage.getItem("access");
 
@@ -44,16 +50,17 @@ const AuthContextProvider = ({ children }) => {
       setIsAuthenticated(false);
       return false;
     }
-  };
+  }, []);
 
   useEffect(() => {
     checkAuthentication();
-  }, []);
+  }, [checkAuthentication]);
 
   const login = async (body) => {
     try {
       const res = await loginRequest(body);
       localStorage.clear();
+
       if (res.status === 200) {
         const now = new Date();
         const expiry = now.getTime() + 5 * 60 * 1000; // 5 minutes
@@ -63,7 +70,8 @@ const AuthContextProvider = ({ children }) => {
         await checkAuthentication();
         return { status: 200 };
       }
-      console.log("ERROR INESPERADO:", res);
+
+      console.error("ERROR INESPERADO:", res);
       throw new Error("Unexpected error during login.");
     } catch (error) {
       console.error(error);

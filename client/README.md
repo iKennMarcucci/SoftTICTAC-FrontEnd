@@ -1,8 +1,25 @@
-# React + Vite
+# SoftTicTac
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Herramientas pedagógicas
 
-Currently, two official plugins are available:
+### Líder
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [] Listar herramientas pedagógicas pendientes de revisión
+- [] Aprobar herramientas pedagógicas
+- [] Rechazar herramientas pedagógicas y dejar recomendaciones
+
+### Docente
+
+- [x] Crear herramientas pedagógicas
+
+## Contenidos digitales
+
+### Líder
+
+- [] Listar contenidos digitales pendientes de revisión
+- [] Aprobar contenidos digitales
+- [] Rechazar contenidos digitales y dejar recomendaciones
+
+### Docente
+
+- [] Crear contenidos digitales

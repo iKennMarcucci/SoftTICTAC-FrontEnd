@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import LogoFull from "../../public/Logos/LogoFull.webp";
-import Escudo from "../../public/Logos/IENSM.webp";
-import { useAuth } from "../Contextos/AuthContext";
 import { useRecoilState } from "recoil";
+
+import { getRole } from "@/utils/User";
+import Escudo from "../../public/Logos/IENSM.webp";
+import LogoFull from "../../public/Logos/LogoFull.webp";
+import { useAuth } from "../Contextos/AuthContext";
 import { isOpenState } from "../Contextos/RecoilState";
-import { getRole, isLider } from "~/utils/User";
 
 function Dashboard() {
   const location = useLocation();

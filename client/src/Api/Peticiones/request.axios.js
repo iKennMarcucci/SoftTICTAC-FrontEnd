@@ -1,5 +1,6 @@
 import { backendAPI } from "../backendAPI.axios";
 import { endpoints } from "../../Endpoints/Endpoints";
+import { Status } from "@/types/Status";
 
 // Contenidos Digitales
 export const getContenidosRequest = () =>
@@ -16,8 +17,15 @@ export const sendContenidosRequest = (body) =>
 export const getHerramientasRequest = () =>
   backendAPI.get(endpoints.PUBLIC_HERRAMIENTAS);
 
-export const sendHerramientasRequest = (body) =>
-  backendAPI.post(endpoints.CREATE_CONTENIDOS, body);
+export function getHerramientasPendientes() {
+  return backendAPI.get(
+    `${endpoints.PRIVATE_HERRAMIENTAS}?estado=${Status.PENDIENTE}`
+  );
+}
+
+export const sendHerramientasRequest = (body) => {
+  return backendAPI.post(endpoints.CREATE_HERRAMIENTAS, body);
+};
 
 // Items Shared
 export const getEjesRequest = () => backendAPI.get(endpoints.GET_EJES);

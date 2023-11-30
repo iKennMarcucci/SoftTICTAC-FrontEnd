@@ -1,12 +1,4 @@
-export const UserRoles = {
-  LIDER: 2,
-  DOCENTE: 3,
-};
-
-const RolesTitles = {
-  [UserRoles.LIDER]: "Líder PPT",
-  [UserRoles.DOCENTE]: "Docente",
-};
+import { RolesTitles, UserRoles } from "@/types/User";
 
 /**
  * Comprueba si el usuario es un líder PPT
