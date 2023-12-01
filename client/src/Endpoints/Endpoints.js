@@ -1,5 +1,5 @@
 export const endpoints = {
-  URL_API: import.meta.env.VITE_API_URL,
+  URL_API: "https://apisoftictac.calzadoan.com/api",
   LOGIN: "auth/token/",
   REFRESH: "/auth/token/refresh/",
   PROFILE: "/user/",
