@@ -6,11 +6,14 @@
 
 - [x] Listar herramientas pedagógicas pendientes de revisión
 - [x] Aprobar herramientas pedagógicas
-- [] Rechazar herramientas pedagógicas y dejar recomendaciones
+- [x] Rechazar herramientas pedagógicas y dejar recomendaciones
 
 ### Docente
 
 - [x] Crear herramientas pedagógicas
+- [x] Listar herramientas pedagógicas rechazadas
+- [x] Editar herramientas pedagógicas rechazadas
+- [x] Listar herramientas pedagógicas aprobadas
 
 ## Contenidos digitales
 

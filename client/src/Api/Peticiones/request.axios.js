@@ -40,6 +40,10 @@ export const sendHerramientasRequest = (body) => {
   return backendAPI.post(endpoints.CREATE_HERRAMIENTAS, body);
 };
 
+export function updateHerramienta(id, body) {
+  return backendAPI.put(`${endpoints.UPDATE_HERRAMIENTAS}/${id}/`, body);
+}
+
 /**
  * Aprobación de una herramienta por parte del líder PPT
  * @param {number} id de la herramienta a aprobar

@@ -137,7 +137,7 @@ const HerramientasContextProvider = ({ children }) => {
 
   useEffect(() => {
     async function getHerramientas() {
-      if (!user) {
+      if (!user || !status) {
         return;
       }
 

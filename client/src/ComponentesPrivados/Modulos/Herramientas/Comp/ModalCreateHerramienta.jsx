@@ -1,7 +1,11 @@
 import { useState } from "react";
 import Select from "react-select";
+import { useForm, Controller } from "react-hook-form";
 
-import { sendHerramientasRequest } from "@/Api/Peticiones/request.axios";
+import {
+  sendHerramientasRequest,
+  updateHerramienta,
+} from "@/Api/Peticiones/request.axios";
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
 
 const poblaciones = [
@@ -23,71 +27,29 @@ const MINUTES_MULTIPLIER = 5;
 
 const tiempoOptions = [
   {
-    value: 1,
+    // Convetir a milisegundos
+    value: 1 * MINUTES_MULTIPLIER * 60 * 1000,
     label: "5",
   },
   {
-    value: 2,
+    value: 2 * MINUTES_MULTIPLIER * 60 * 1000,
     label: "10",
   },
   {
-    value: 3,
+    value: 3 * MINUTES_MULTIPLIER * 60 * 1000,
     label: "15",
   },
   {
-    value: 4,
+    value: 4 * MINUTES_MULTIPLIER * 60 * 1000,
     label: "20",
   },
   {
-    value: 5,
+    value: 5 * MINUTES_MULTIPLIER * 60 * 1000,
     label: "25",
   },
   {
-    value: 6,
+    value: 6 * MINUTES_MULTIPLIER * 60 * 1000,
     label: "30",
-  },
-];
-
-const initialRecursos = [
-  {
-    value: 1,
-    label: "Crayones, Colores y Marcadores",
-  },
-  {
-    value: 2,
-    label: "Pliego de Cartulina",
-  },
-  {
-    value: 3,
-    label: "Pegante y Tijeras",
-  },
-  {
-    value: 4,
-    label: "Periódicos y Revistas",
-  },
-  {
-    value: 5,
-    label: "Plastilina",
-  },
-  {
-    value: 6,
-    label: "Pinceles y Pinturas",
-  },
-  {
-    value: 7,
-    label: "Papel Seda",
-  },
-  {
-    value: 8,
-    label: "Proyector y Sonido",
-  },
-  {
-    value: 9,
-    label: "Computadora Portatil",
-  },
-  {
-    value: 10,
-    label: "Palitos de Helado",
   },
 ];
 
@@ -98,36 +60,16 @@ const initialRecursos = [
  * @param {() => void} props.onClose
  * @returns
  */
-function ModalCreateHerramienta({ isOpen, onClose }) {
-  const { ejes } = useHerramienta();
-
-  const [poblacion, setPoblacion] = useState("");
-  const [competencias, setCompetencias] = useState([]);
-  const [selectedEje, setSelectedEje] = useState({
-    value: 0,
-    label: "Seleccione un eje",
-    competencias: [],
+function ModalCreateHerramienta({ initialValues, mode, isOpen, onClose }) {
+  const form = useForm({
+    values: initialValues,
+    defaultValues: initialValues,
   });
-  const [esPublico, setEsPublico] = useState(false);
+
+  const actividades = form.watch("actividades");
+
+  const { ejes } = useHerramienta();
   const [nuevoRecurso, setNuevoRecurso] = useState("");
-  const [recursos, setRecursos] = useState(initialRecursos);
-
-  const [actividades, setActividades] = useState([
-    {
-      proceso: "",
-      recursos: [],
-      tiempo: {
-        label: "",
-        value: 0,
-      },
-    },
-  ]);
-
-  const [nombre, setNombre] = useState("");
-
-  const handleCheckboxChange = () => {
-    setEsPublico(!esPublico);
-  };
 
   const handleRecursoChange = (event) => {
     setNuevoRecurso(event.target.value);
@@ -138,6 +80,8 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
       alert("Por favor, ingresa un nombre de recurso válido.");
       return;
     }
+
+    const recursos = form.getValues("recursos");
 
     if (
       recursos.some(
@@ -150,22 +94,30 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
       return;
     }
 
-    setRecursos((prev) => [
-      ...prev,
-      { label: nuevoRecurso, value: prev.length },
+    form.setValue("recursos", [
+      ...recursos,
+      { label: nuevoRecurso, value: recursos.length },
     ]);
+
     setNuevoRecurso("");
   };
 
   const handleAgregarFila = () => {
-    setActividades([...actividades, { proceso: "", recursos: [], tiempo: 0 }]);
+    const actividades = form.getValues("actividades");
+
+    form.setValue("actividades", [
+      ...actividades,
+      { proceso: "", recursos: [], tiempo: 0 },
+    ]);
   };
 
   const handleEliminarFila = () => {
-    setActividades((prev) => prev.slice(0, -1));
+    const prev = form.getValues("actividades");
+    form.setValue("actividades", prev.slice(0, -1));
   };
 
   const handleSelectMinutosChange = (index, selectedMinutos) => {
+    const actividades = form.getValues("actividades");
     const newState = [...actividades];
 
     newState[index] = {
@@ -173,56 +125,34 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
       tiempo: selectedMinutos,
     };
 
-    setActividades(newState);
+    form.setValue("actividades", newState);
   };
 
   const handleSelectRecursoChange = (index, selectedOption) => {
-    const newState = [...actividades];
-
-    newState[index] = {
-      ...newState[index],
-      recursos: selectedOption,
-    };
-
-    setActividades(newState);
+    form.setValue(`actividades.${index}.recursos`, selectedOption);
   };
 
-  const handleInputChange = (index, campo, valor) => {
-    const newState = [...actividades];
-
-    newState[index] = {
-      ...newState[index],
-      [campo]: valor,
-    };
-
-    setActividades(newState);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleSubmit = async (values) => {
     try {
-      const values = Object.fromEntries(new FormData(event.target).entries());
-
       const duracion = actividades.reduce((accumulator, current) => {
-        const milliseconds =
-          current.tiempo.value * MINUTES_MULTIPLIER * 60 * 1000;
-
+        const milliseconds = current.tiempo.value;
         return accumulator + milliseconds;
       }, 0);
 
       const data = {
         tema: {
           nombre: values.tema,
-          id_competencia: competencias.map((item) => ({ id: item.value })),
-          id_linea: selectedEje.value,
+          id_competencia: values.competencias.map((item) => ({
+            id: item.value,
+          })),
+          id_linea: values.eje.value,
         },
         herramienta: {
           nombre: values.nombre,
           objetivo: values.objetivo,
           recomendacion: "No aplica",
-          visibilidad: esPublico,
-          id_poblacion: poblacion.map((item) => ({ id: item.value })),
+          visibilidad: values.visibilidad,
+          id_poblacion: values.poblacion.map((item) => ({ id: item.value })),
           duracion,
         },
         momentos: [
@@ -233,14 +163,13 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
           {
             nombre: "Desarrollo",
             descripcion: "Explicación de desarrollo",
-            procesos: actividades.map((actividad) => ({
+            procesos: values.actividades.map((actividad) => ({
+              id: actividad.id,
               descripcion: actividad.proceso,
               recurso: actividad.recursos
                 .map((recurso) => recurso.label)
                 .join(","),
-
-              tiempo:
-                Number(actividad.tiempo.value) * MINUTES_MULTIPLIER * 60 * 1000,
+              tiempo: Number(actividad.tiempo.value),
             })),
           },
           {
@@ -250,10 +179,13 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
         ],
       };
 
-      sendHerramientasRequest(data);
-      onClose();
+      if (mode === "edit") {
+        updateHerramienta(initialValues.id, data);
+      } else {
+        sendHerramientasRequest(data);
+      }
 
-      event.target.reset();
+      onClose();
     } catch (error) {
       console.error(error);
     }
@@ -313,123 +245,190 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
 
             <div className="max-h-modal flex flex-col overflow-y-auto px-4 pb-4">
               <form
-                onSubmit={handleSubmit}
+                onSubmit={form.handleSubmit(handleSubmit)}
                 className="mx-6 flex flex-col items-center"
               >
                 <h3 className="mt-4 w-full max-w-3xl">General</h3>
                 <hr className="border-delgado-b mb-4 w-full max-w-3xl" />
                 <div className="mb-4 w-full max-w-2xl space-y-4">
-                  <div>
-                    <label htmlFor="eje" className="block text-sm">
-                      Eje
-                    </label>
-                    <Select
-                      defaultValue={selectedEje}
-                      onChange={setSelectedEje}
-                      options={ejes}
-                      placeholder="Elige un Eje"
-                      menuPortalTarget={document.body}
-                      id="eje"
-                      styles={customStyles}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="nombre" className="block text-sm">
-                      Nombre de la Herramienta
-                    </label>
-                    <input
-                      type="text"
-                      name="nombre"
-                      id="nombre"
-                      value={nombre}
-                      className="border-delgado w-full rounded-md bg-blue-50 p-2.5 text-sm"
-                      placeholder="Escribe el nombre de la herramienta"
-                      required
-                      maxLength={50}
-                      onChange={(e) => {
-                        setNombre(e.target.value.slice(0, 50));
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="poblacion" className="block text-sm">
-                      Población Objetivo
-                    </label>
-                    <Select
-                      defaultValue={poblacion}
-                      onChange={setPoblacion}
-                      options={poblaciones}
-                      placeholder="Elige una población"
-                      menuPortalTarget={document.body}
-                      id="poblacion"
-                      styles={customStyles}
-                      isMulti
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="tema" className="block text-sm">
-                      Tema
-                    </label>
-                    <input
-                      type="text"
-                      name="tema"
-                      id="tema"
-                      className="border-delgado w-full rounded-lg bg-blue-50 p-2.5 text-sm"
-                      required
-                      placeholder="Escribe el tema"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="objetivo" className="block text-sm">
-                      Objetivo
-                    </label>
-                    <input
-                      type="text"
-                      name="objetivo"
-                      id="objetivo"
-                      className="border-delgado w-full rounded-lg bg-blue-50 p-2.5 text-sm"
-                      required
-                      placeholder="Escribe el objetivo a alcanzar"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="compe" className="block text-sm">
-                      Competencias
-                    </label>
-                    <Select
-                      defaultValue={competencias}
-                      onChange={setCompetencias}
-                      options={selectedEje.competencias}
-                      placeholder="Elige las competencias a desarrollar"
-                      menuPortalTarget={document.body}
-                      id="compe"
-                      styles={customStyles}
-                      isMulti
-                      components={{
-                        NoOptionsMessage,
-                      }}
-                    />
-                  </div>
+                  <Controller
+                    control={form.control}
+                    name="eje"
+                    render={({ field }) => (
+                      <div>
+                        <label htmlFor="eje" className="block text-sm">
+                          Eje
+                        </label>
+                        <Select
+                          defaultValue={field.value}
+                          onChange={(value) => {
+                            const { competencias, ...rest } = value;
+
+                            form.setValue("eje", rest);
+                            form.setValue("eje.competencias", competencias);
+                          }}
+                          options={ejes}
+                          placeholder="Seleccione un eje"
+                          menuPortalTarget={document.body}
+                          id="eje"
+                          styles={customStyles}
+                        />
+                      </div>
+                    )}
+                  />
+
+                  <Controller
+                    control={form.control}
+                    name="nombre"
+                    render={({ field }) => (
+                      <div>
+                        <label htmlFor="nombre" className="block text-sm">
+                          Nombre de la Herramienta
+                        </label>
+                        <input
+                          type="text"
+                          name="nombre"
+                          id="nombre"
+                          value={field.value}
+                          className="border-delgado w-full rounded-md bg-blue-50 p-2.5 text-sm"
+                          placeholder="Escribe el nombre de la herramienta"
+                          required
+                          maxLength={50}
+                          onChange={(e) => {
+                            form.setValue(
+                              "nombre",
+                              e.target.value.slice(0, 50),
+                            );
+                          }}
+                        />
+                      </div>
+                    )}
+                  />
+
+                  <Controller
+                    name="poblacion"
+                    control={form.control}
+                    render={({ field }) => (
+                      <div>
+                        <label htmlFor="poblacion" className="block text-sm">
+                          Población Objetivo
+                        </label>
+                        <Select
+                          defaultValue={field.value}
+                          onChange={(value) => {
+                            form.setValue("poblacion", value);
+                          }}
+                          options={poblaciones}
+                          placeholder="Elige una población"
+                          menuPortalTarget={document.body}
+                          id="poblacion"
+                          styles={customStyles}
+                          isMulti
+                          required
+                        />
+                      </div>
+                    )}
+                  />
+
+                  <Controller
+                    control={form.control}
+                    name="tema"
+                    render={({ field }) => (
+                      <div>
+                        <label htmlFor="tema" className="block text-sm">
+                          Tema
+                        </label>
+                        <input
+                          {...field}
+                          type="text"
+                          id="tema"
+                          className="border-delgado w-full rounded-lg bg-blue-50 p-2.5 text-sm"
+                          placeholder="Escribe el tema"
+                          required
+                        />
+                      </div>
+                    )}
+                  />
+
+                  <Controller
+                    control={form.control}
+                    name="objetivo"
+                    render={({ field }) => (
+                      <div>
+                        <label htmlFor="objetivo" className="block text-sm">
+                          Objetivo
+                        </label>
+                        <input
+                          {...field}
+                          type="text"
+                          name="objetivo"
+                          id="objetivo"
+                          className="border-delgado w-full rounded-lg bg-blue-50 p-2.5 text-sm"
+                          placeholder="Escribe el objetivo a alcanzar"
+                          required
+                        />
+                      </div>
+                    )}
+                  />
+
+                  <Controller
+                    name="competencias"
+                    control={form.control}
+                    render={({ field }) => {
+                      const competencias = form.watch("eje.competencias");
+
+                      return (
+                        <div>
+                          <label htmlFor="compe" className="block text-sm">
+                            Competencias
+                          </label>
+                          <Select
+                            defaultValue={field.value}
+                            onChange={(value) =>
+                              form.setValue("competencias", value)
+                            }
+                            options={competencias}
+                            placeholder="Elige las competencias a desarrollar"
+                            menuPortalTarget={document.body}
+                            id="compe"
+                            styles={customStyles}
+                            isMulti
+                            required
+                            components={{
+                              NoOptionsMessage,
+                            }}
+                          />
+                        </div>
+                      );
+                    }}
+                  />
                 </div>
 
                 <h3 className="w-full max-w-3xl">Momentos para desarrollar</h3>
                 <hr className="border-delgado-b mb-4 w-full max-w-3xl" />
                 <div className="mb-4 w-full max-w-2xl space-y-4">
-                  <div>
-                    <label
-                      htmlFor="presentacion"
-                      className="block text-sm font-normal"
-                    >
-                      Primer Momento (Presentación):
-                    </label>
-                    <textarea
-                      name="presentacion"
-                      id="presentacion"
-                      className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
-                      required
-                      placeholder="Escribe como se desarrollará la presentación de la herramienta"
-                    />
-                  </div>
+                  <Controller
+                    name="presentacion"
+                    control={form.control}
+                    render={({ field }) => (
+                      <div>
+                        <label
+                          htmlFor="presentacion"
+                          className="block text-sm font-normal"
+                        >
+                          Primer Momento (Presentación):
+                        </label>
+                        <textarea
+                          {...field}
+                          name="presentacion"
+                          id="presentacion"
+                          className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
+                          placeholder="Escribe como se desarrollará la presentación de la herramienta"
+                          required
+                        />
+                      </div>
+                    )}
+                  />
 
                   <div>
                     <label
@@ -453,8 +452,8 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                       <div className="grid grid-cols-12 gap-2">
                         <input
                           type="text"
-                          name="recursoxdd"
-                          id="recursoxdd"
+                          name="recurso"
+                          id="recurso"
                           className="border-delgado col-span-9 w-full rounded-md bg-blue-50 p-2.5 text-sm"
                           placeholder="Escribe el recurso a utilizar"
                           value={nuevoRecurso}
@@ -482,36 +481,45 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                         {actividades.map((actividad, index) => (
                           <tr key={index} className="border-delgado">
                             <td className="border-delgado px-2 pt-2 text-justify">
-                              <textarea
-                                name="proceso"
-                                value={actividad.proceso}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "proceso",
-                                    e.target.value,
-                                  )
-                                }
-                                className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
-                                required
-                                placeholder="Escribe cuales son los procesos de desarrollo de la herramienta"
+                              <Controller
+                                name={`actividades.${index}.proceso`}
+                                control={form.control}
+                                render={({ field }) => (
+                                  <textarea
+                                    {...field}
+                                    className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
+                                    placeholder="Escribe cuales son los procesos de desarrollo de la herramienta"
+                                    required
+                                  />
+                                )}
                               />
                             </td>
                             <td className="border-delgado-r px-2 text-start">
-                              <Select
-                                value={actividad.recursos}
-                                onChange={(selectedOption) =>
-                                  handleSelectRecursoChange(
-                                    index,
-                                    selectedOption,
-                                  )
-                                }
-                                options={recursos}
-                                isSearchable={false}
-                                placeholder="Recursos..."
-                                id={`recursos-${index}`}
-                                styles={customStyles2}
-                                isMulti
+                              <Controller
+                                name={`actividades.${index}.recursos`}
+                                control={form.control}
+                                render={({ field }) => {
+                                  const recursos = form.getValues("recursos");
+
+                                  return (
+                                    <Select
+                                      value={field.value}
+                                      onChange={(selectedOption) => {
+                                        handleSelectRecursoChange(
+                                          index,
+                                          selectedOption,
+                                        );
+                                      }}
+                                      options={recursos}
+                                      isSearchable={false}
+                                      placeholder="Recursos..."
+                                      id={`recursos-${index}`}
+                                      styles={customStyles2}
+                                      isMulti
+                                      required
+                                    />
+                                  );
+                                }}
                               />
                             </td>
                             <td className="px-2 text-start">
@@ -528,6 +536,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                                 placeholder="Min"
                                 id={`minutos-${index}`}
                                 styles={customStyles}
+                                required
                               />
                             </td>
                           </tr>
@@ -566,38 +575,55 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                     </div>
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="cierre"
-                      className="block text-sm font-normal"
-                    >
-                      Tercer Momento (Cierre):
-                    </label>
-                    <textarea
-                      name="cierre"
-                      id="cierre"
-                      className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
-                      required
-                      placeholder="Escribe como se cerrará el desarrollo de la herramienta"
-                    />
-                  </div>
+                  <Controller
+                    name="cierre"
+                    control={form.control}
+                    render={({ field }) => (
+                      <div>
+                        <label
+                          htmlFor="cierre"
+                          className="block text-sm font-normal"
+                        >
+                          Tercer Momento (Cierre):
+                        </label>
+                        <textarea
+                          {...field}
+                          id="cierre"
+                          className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
+                          required
+                          placeholder="Escribe como se cerrará el desarrollo de la herramienta"
+                        />
+                      </div>
+                    )}
+                  />
 
-                  <div>
-                    <label htmlFor="estado" className="block text-sm">
-                      Estado
-                    </label>
-                    <label className="cyberpunk-checkbox-label">
-                      <input
-                        type="checkbox"
-                        className="cyberpunk-checkbox"
-                        id="estado"
-                        name="estado"
-                        checked={esPublico}
-                        onChange={handleCheckboxChange}
-                      />
-                      Público
-                    </label>
-                  </div>
+                  <Controller
+                    name="visibilidad"
+                    control={form.control}
+                    render={({ field }) => {
+                      return (
+                        <div>
+                          <label htmlFor="estado" className="block text-sm">
+                            Estado
+                          </label>
+                          <label className="cyberpunk-checkbox-label">
+                            <input
+                              {...field}
+                              type="checkbox"
+                              className="cyberpunk-checkbox"
+                              id="estado"
+                              name="estado"
+                              checked={field.value}
+                              onChange={() => {
+                                form.setValue("visibilidad", !field.value);
+                              }}
+                            />
+                            Público
+                          </label>
+                        </div>
+                      );
+                    }}
+                  />
                 </div>
 
                 <div className="w-full max-w-md text-center">

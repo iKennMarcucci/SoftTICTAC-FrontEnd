@@ -1,6 +1,6 @@
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
 
-export default function HerramientasControlItem({ item, index, onShowMore }) {
+export default function HerramientasControlItem({ item, onShowMore }) {
   const { ejes } = useHerramienta();
 
   const eje = ejes.find((eje) => eje.value === item.id_tema.id_linea);
@@ -49,7 +49,7 @@ export default function HerramientasControlItem({ item, index, onShowMore }) {
         </div>
       </div>
       <button
-        onClick={() => onShowMore(index)}
+        onClick={() => onShowMore(item)}
         className="mb-2 cursor-pointer rounded-md bg-blue-600 px-20 py-1 text-center font-medium text-white hover:bg-blue-500"
       >
         Ver más

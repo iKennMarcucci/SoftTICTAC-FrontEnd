@@ -9,6 +9,7 @@ export const endpoints = {
   PUBLIC_HERRAMIENTAS: "/herramientas/publico/",
   PRIVATE_HERRAMIENTAS: "/herramientas/herramienta",
   CREATE_HERRAMIENTAS: "/herramientas/herramienta/",
+  UPDATE_HERRAMIENTAS: "/herramientas/update",
   GET_EJES: "/shared/lineas/",
   GET_POBLACIONES: "shared/poblaciones/",
 };
