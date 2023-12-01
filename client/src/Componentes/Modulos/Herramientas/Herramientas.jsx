@@ -1,4 +1,6 @@
+import { getHerramientasRequest } from "@/Api/Peticiones/request.axios";
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
+import { useEffect, useState } from "react";
 
 const calcularTiempo = (tiempoMilis) => {
   const horas = Math.floor(tiempoMilis / (1000 * 60 * 60));
@@ -25,7 +27,17 @@ const calcularDuracionTotal = (procesos = []) => {
 };
 
 function Herramientas() {
-  const { herramientas } = useHerramienta();
+  const [herramientas, setHerramientas] = useState([]);
+
+  useEffect(() => {
+    getHerramientasRequest()
+      .then((response) => {
+        setHerramientas(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   if (herramientas.length === 0) {
     return <p>No se ha encontrado ninguna Herramienta Pedagógica</p>;
