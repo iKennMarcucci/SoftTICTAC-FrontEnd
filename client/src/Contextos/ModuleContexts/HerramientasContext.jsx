@@ -138,8 +138,6 @@ const HerramientasContextProvider = ({ children }) => {
   useEffect(() => {
     async function getHerramientas() {
       if (!user) {
-        const response = await getHerramientasRequest();
-        setHerramientas(response.data);
         return;
       }
 
