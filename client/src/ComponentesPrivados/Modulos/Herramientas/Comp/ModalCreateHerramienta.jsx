@@ -7,6 +7,9 @@ import {
   updateHerramienta,
 } from "@/Api/Peticiones/request.axios";
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
+import { isDocente } from "@/utils/User";
+import { Status } from "@/types/Status";
+import { useAuth } from "@/Contextos/AuthContext";
 
 const poblaciones = [
   {
@@ -61,6 +64,8 @@ const tiempoOptions = [
  * @returns
  */
 function ModalCreateHerramienta({ initialValues, mode, isOpen, onClose }) {
+  const { user } = useAuth();
+
   const form = useForm({
     values: initialValues,
     defaultValues: initialValues,
@@ -625,6 +630,25 @@ function ModalCreateHerramienta({ initialValues, mode, isOpen, onClose }) {
                     }}
                   />
                 </div>
+
+                {isDocente(user) &&
+                  initialValues.estado === Status.RECHAZADO && (
+                    <div className="mb-4 w-full px-6">
+                      <h5 className="mb-4 font-medium">Recomendaciones</h5>
+                      <Controller
+                        control={form.control}
+                        name="recomendacion"
+                        render={({ field }) => (
+                          <textarea
+                            {...field}
+                            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Recomendaciones"
+                            readOnly
+                          />
+                        )}
+                      />
+                    </div>
+                  )}
 
                 <div className="w-full max-w-md text-center">
                   <button

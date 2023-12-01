@@ -86,6 +86,8 @@ const defaultValues = {
   ],
   presentacion: "",
   cierre: "",
+  recomendacion: "",
+  estado: "Pendiente",
 };
 
 function HerramientasControl() {
@@ -189,6 +191,8 @@ function HerramientasControl() {
         actividades,
         presentacion: selectedHerramienta.momentos[0].descripcion,
         cierre: selectedHerramienta.momentos[2].descripcion,
+        recomendacion: selectedHerramienta.revision,
+        estado: selectedHerramienta.estado,
       };
     }
 
