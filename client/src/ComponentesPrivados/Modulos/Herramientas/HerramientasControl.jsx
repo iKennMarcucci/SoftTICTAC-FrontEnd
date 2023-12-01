@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { isLider } from "@/utils/User";
+import { isDocente, isLider } from "@/utils/User";
 import { useAuth } from "@/Contextos/AuthContext";
 
 function HerramientasControl() {
@@ -44,13 +44,14 @@ function HerramientasControl() {
         <h2 className="text-2xl font-medium max-sm:mx-2">
           Herramientas Pedagógicas
         </h2>
-        {/* el button lo que hará es sacar un modal con el form de una herramienta */}
-        <button
-          onClick={() => openModalSubmit()}
-          className=" rounded-md bg-blue-100 px-2 font-normal hover:bg-blue-300"
-        >
-          Crear una Herramienta
-        </button>
+        {isDocente(user) && (
+          <button
+            onClick={() => openModalSubmit()}
+            className=" rounded-md bg-blue-100 px-2 font-normal hover:bg-blue-300"
+          >
+            Crear una Herramienta
+          </button>
+        )}
       </div>
       <ModalCreateHerramienta isOpen={showCreate} onClose={closeModalCreate} />
       <hr className="mb-4 mt-2 border-stone-400 max-sm:mx-2" />

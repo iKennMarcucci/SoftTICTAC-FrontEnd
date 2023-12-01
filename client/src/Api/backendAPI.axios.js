@@ -54,7 +54,6 @@ backendAPI.interceptors.request.use(
           });
 
           response = await response.json();
-          console.log(response);
           localStorage.setItem("access", response.access);
           localStorage.setItem("timestamp", now + 5 * 60 * 1000);
           config.headers.Authorization = `Bearer ${response.access}`;
@@ -62,7 +61,7 @@ backendAPI.interceptors.request.use(
           localStorage.removeItem("access");
           localStorage.removeItem("refresh");
           localStorage.removeItem("timestamp");
-          console.error({ errorMessage: { error } });
+          console.error(error);
         }
       } else {
         config.headers.Authorization = `Bearer ${token}`;
@@ -86,5 +85,5 @@ backendAPI.interceptors.request.use(
   (error) => {
     console.error(error);
     return Promise.reject(error);
-  }
+  },
 );
