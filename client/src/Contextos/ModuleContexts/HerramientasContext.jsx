@@ -8,10 +8,7 @@ import {
 } from "@/Api/Peticiones/request.axios";
 import { Status } from "@/types/Status";
 
-const HerramientasContext = createContext({
-  herramientas: [],
-  ejes: [],
-});
+const HerramientasContext = createContext();
 
 export const useHerramienta = () => {
   const context = useContext(HerramientasContext);
@@ -129,6 +126,10 @@ const ejes = [
   },
 ];
 
+function getEjeByHerramienta(herramienta) {
+  return ejes.find((eje) => eje.value === herramienta.id_tema.id_linea);
+}
+
 const HerramientasContextProvider = ({ children }) => {
   const { user } = useAuth();
   const [status, setStatus] = useState(Status.PENDIENTE);
@@ -136,7 +137,11 @@ const HerramientasContextProvider = ({ children }) => {
 
   useEffect(() => {
     async function getHerramientas() {
-      if (!user) return;
+      if (!user) {
+        const response = await getHerramientasRequest();
+        setHerramientas(response.data);
+        return;
+      }
 
       if (isLider(user)) {
         const response = await getHerramientasByStatus(status);
@@ -162,6 +167,7 @@ const HerramientasContextProvider = ({ children }) => {
     ejes,
     status,
     onChangeStatus: setStatus,
+    getEjeByHerramienta,
   };
 
   return (

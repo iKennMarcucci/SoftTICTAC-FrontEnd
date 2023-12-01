@@ -29,10 +29,21 @@ function App() {
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <Auth />}
         />
-        <Route path="/modulo/contenidos-digitales" element={<Digitales />} />
+        <Route
+          path="/modulo/contenidos-digitales"
+          element={
+            <DigitalesContextProvider>
+              <Digitales />
+            </DigitalesContextProvider>
+          }
+        />
         <Route
           path="/modulo/herramientas-pedagogicas"
-          element={<Herramientas />}
+          element={
+            <HerramientasContextProvider>
+              <Herramientas />
+            </HerramientasContextProvider>
+          }
         />
 
         <Route element={<ProtectedRoutes />}>

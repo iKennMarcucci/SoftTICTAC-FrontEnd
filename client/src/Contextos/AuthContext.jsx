@@ -18,7 +18,7 @@ export const useAuth = () => {
 
   if (!context) {
     throw new Error(
-      "useAuth debe estar dentro del proveedor AuthContextProvider"
+      "useAuth debe estar dentro del proveedor AuthContextProvider",
     );
   }
 
@@ -28,6 +28,7 @@ export const useAuth = () => {
 const AuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   const checkAuthentication = useCallback(async function checkAuthentication() {
     try {
@@ -49,6 +50,8 @@ const AuthContextProvider = ({ children }) => {
       setUser(null);
       setIsAuthenticated(false);
       return false;
+    } finally {
+      setIsAuthenticating(false);
     }
   }, []);
 
@@ -99,6 +102,7 @@ const AuthContextProvider = ({ children }) => {
     checkAuthentication,
     user,
     isAuthenticated,
+    isAuthenticating,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

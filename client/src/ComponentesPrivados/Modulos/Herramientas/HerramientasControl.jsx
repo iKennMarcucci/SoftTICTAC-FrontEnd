@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
 import HerramientaDetails from "./Comp/HerramientaDetails";
 import ModalCreateHerramienta from "./Comp/ModalCreateHerramienta";
-import HerramientasItem from "./HerramientasItem";
+import HerramientasControlItem from "./HerramientasControlItem";
 
 import {
   Select,
@@ -85,7 +85,7 @@ function HerramientasControl() {
       {herramientas.length > 0 ? (
         <section className="grid grid-cols-12 gap-4">
           {herramientas.map((item, index) => (
-            <HerramientasItem
+            <HerramientasControlItem
               key={item.id}
               item={item}
               index={index}
