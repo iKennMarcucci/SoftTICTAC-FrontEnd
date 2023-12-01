@@ -7,12 +7,13 @@ import {
 } from "react";
 
 import {
-  getContenidosPendientes,
+  getContenidosByStatus,
   getContenidosRequest,
   sendContenidosRequest,
 } from "@/Api/Peticiones/request.axios";
 import { useAuth } from "@/Contextos/AuthContext";
 import { isLider } from "@/utils/User";
+import { Status } from "@/types/Status";
 
 const DigitalesContext = createContext();
 
@@ -21,7 +22,7 @@ export function useDigitales() {
 
   if (!context) {
     throw new Error(
-      "useDigitales debe estar dentro del proveedor DigitalesContextProvider"
+      "useDigitales debe estar dentro del proveedor DigitalesContextProvider",
     );
   }
 
@@ -31,27 +32,34 @@ export function useDigitales() {
 const DigitalesContextProvider = ({ children }) => {
   const { user } = useAuth();
 
-  const [digitales, setDigitales] = useState(null);
+  const [digitales, setDigitales] = useState([]);
+  const [status, setStatus] = useState(undefined);
 
   const getDigitales = useCallback(async () => {
-    if (!user) return;
+    if (!user || !status) return;
 
     if (isLider(user)) {
-      const res = await getContenidosPendientes();
+      const res = await getContenidosByStatus(status);
       setDigitales(res.data);
+      return;
+    }
+
+    if (status === Status.RECHAZADO) {
+      const response = await getContenidosByStatus(Status.RECHAZADO);
+      setDigitales(response.data);
       return;
     }
 
     const res = await getContenidosRequest();
     setDigitales(res.data);
-  }, [user]);
+  }, [user, status]);
 
   const sendContenidos = async (body) => {
     try {
       const token = localStorage.getItem("access");
 
       if (token) {
-        const res = await sendContenidosRequest(body, token);
+        await sendContenidosRequest(body, token);
         await getDigitales();
         return { status: 200 };
       }
@@ -68,7 +76,9 @@ const DigitalesContextProvider = ({ children }) => {
 
   const value = {
     digitales,
+    status,
     sendContenidos,
+    onChangeStatus: setStatus,
   };
 
   return (

@@ -10,8 +10,30 @@ export function getContenidosPendientes() {
   return backendAPI.get(`${endpoints.PRIVATE_CONTENIDOS}?estado=Pendiente`);
 }
 
+export function getContenidosByStatus(status) {
+  return backendAPI.get(`${endpoints.PRIVATE_CONTENIDOS}?estado=${status}`);
+}
+
 export const sendContenidosRequest = (body) =>
   backendAPI.post(endpoints.CREATE_CONTENIDOS, body);
+
+export function updateContenido(id, body) {
+  return backendAPI.patch(`${endpoints.PRIVATE_CONTENIDOS}/${id}/`, body);
+}
+
+export function approveContenido(id) {
+  return backendAPI.patch(`${endpoints.PRIVATE_CONTENIDOS}/${id}/`, {
+    estado: "Aprobado",
+    revision: "Aprobado",
+  });
+}
+
+export function rejectContenido(id, recomendacion) {
+  return backendAPI.patch(`${endpoints.PRIVATE_CONTENIDOS}/${id}/`, {
+    estado: "Rechazado",
+    recomendacion: recomendacion,
+  });
+}
 
 // Herramientas Pedagógicas
 export const getHerramientasRequest = () =>

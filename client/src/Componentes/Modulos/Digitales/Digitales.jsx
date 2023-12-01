@@ -1,67 +1,105 @@
-import { useDigitales } from "@/Contextos/ModuleContexts/DigitalesContext";
+import { useEffect, useState } from "react";
+
+import { getContenidosRequest } from "@/Api/Peticiones/request.axios";
+import ModalCreateDigitales from "@/ComponentesPrivados/Modulos/Digitales/Comp/ModalCreateDigitales";
+import { ejes } from "@/utils/ejes";
 
 function Digitales() {
-  const { digitales } = useDigitales();
+  const [digitales, setDigitales] = useState([]);
+  const [selected, setSelected] = useState(null);
 
-  return digitales ? (
+  useEffect(() => {
+    getContenidosRequest()
+      .then((res) => setDigitales(res.data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  function onShowMore(item) {
+    setSelected(item);
+  }
+
+  if (digitales.length === 0) {
+    return <p>No se ha encontrado ningún Contenido Digital</p>;
+  }
+
+  return (
     <>
+      <ModalCreateDigitales
+        initialValues={
+          selected && {
+            type: selected.archivo ? "archivo" : "url",
+            id: selected.id,
+            url: selected.url,
+            archivo: selected.archivo,
+            nombre: selected.nombre,
+            eje: {
+              value: selected.id_linea,
+              label: ejes.find((eje) => eje.value === selected.id_linea).label,
+            },
+            descripcion: selected.descripcion,
+            id_poblacion: selected.id_poblacion.map((p) => ({
+              value: p.id,
+              label: p.nombre,
+            })),
+            visibilidad: selected.visibilidad,
+            estado: selected.estado,
+            recomendacion: selected.recomendacion,
+          }
+        }
+        isOpen={selected !== null}
+        onClose={() => setSelected(null)}
+      />
       <main className="container mx-auto mt-10">
         <h2 className="text-2xl font-medium max-sm:mx-2">
           Contenidos Digitales
         </h2>
         <hr className="border-stone-400 max-sm:mx-2" />
         <section className="container mx-auto mt-10 grid grid-cols-12 justify-items-center">
-          {digitales.map(
-            (item, index) =>
-              item.publico && (
-                <div
-                  key={index}
-                  className="max-sm:w-72 border-delgado rounded-md p-4 w-60 col-span-2 max-sm:col-span-12 max-md:col-span-6 max-lg:col-span-4 max-xl:col-span-3 max-2xl:col-span-3 mb-3 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex text-stone-500 text-xs">
-                      <p className="font-light">Población:&nbsp;</p>
-                      {item.poblacion.poblacion}
-                    </div>
-                    <div className="h-52 w-full overflow-hidden mb-4 bg-blue-50 p-4 rounded-lg">
-                      <img
-                        src={item.imagenReferencia}
-                        alt={item.titulo}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="text-center">
-                      <h2
-                        className="text-xl font-normal line-clamp-2"
-                        title={item.titulo}
-                      >
-                        {item.titulo}
-                      </h2>
-                      <p
-                        className="text-xs mt-2 line-clamp-3"
-                        title={item.descripcion}
-                      >
-                        {item.descripcion}
-                      </p>
-                    </div>
+          {digitales
+            .filter((d) => d.visibilidad)
+            .map((item) => (
+              <div
+                key={item.id}
+                className="border-delgado col-span-2 mb-3 flex w-60 flex-col justify-between rounded-md p-4 max-2xl:col-span-3 max-xl:col-span-3 max-lg:col-span-4 max-md:col-span-6 max-sm:col-span-12 max-sm:w-72"
+              >
+                <div className="">
+                  <div className="flex text-xs text-stone-500">
+                    <p className="font-light">Población:&nbsp;</p>
+                    {item.id_poblacion.nombre}
                   </div>
-                  <a
-                    href="https://github.com/iKennMarcucci"
-                    target="_blank"
-                    className="text-center cursor-pointer hover:bg-blue-500 bg-blue-600 text-white font-medium mt-4 rounded-md py-1"
-                    rel="noreferrer"
-                  >
-                    Ver
-                  </a>
+                  <div className="mb-4 h-52 w-full overflow-hidden rounded-lg bg-blue-50 p-4">
+                    <img
+                      src={"/Logos/SingleLogo.webp"}
+                      alt={item.titulo}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <h2
+                      className="line-clamp-2 text-xl font-normal"
+                      title={item.titulo}
+                    >
+                      {item.titulo}
+                    </h2>
+                    <p
+                      className="mt-2 line-clamp-3 text-xs"
+                      title={item.descripcion}
+                    >
+                      {item.descripcion}
+                    </p>
+                  </div>
                 </div>
-              )
-          )}
+
+                <button
+                  onClick={() => onShowMore(item)}
+                  className="my-2 cursor-pointer rounded-md bg-blue-600 px-20 py-1 text-center font-medium text-white hover:bg-blue-500"
+                >
+                  Ver
+                </button>
+              </div>
+            ))}
         </section>
       </main>
-    </>
-  ) : (
-    <>
-      <p>No se ha encontrado ningún Contenido Digital</p>
     </>
   );
 }

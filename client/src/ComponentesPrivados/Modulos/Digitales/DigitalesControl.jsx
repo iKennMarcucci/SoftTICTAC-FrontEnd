@@ -1,84 +1,185 @@
-import { useState } from "react";
-import { useDigitales } from "../../../Contextos/ModuleContexts/DigitalesContext";
-import Modal from "./Comp/Modal";
+import { useMemo, useState } from "react";
+
+import { useAuth } from "@/Contextos/AuthContext";
+import { useDigitales } from "@/Contextos/ModuleContexts/DigitalesContext";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { isDocente, isLider } from "@/utils/User";
+import ModalCreateDigitales from "./Comp/ModalCreateDigitales";
+import { ejes } from "@/utils/ejes";
 
 function DigitalesControl() {
-  const { digitales } = useDigitales();
+  const { user } = useAuth();
+  const { digitales, status, onChangeStatus } = useDigitales();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [mode, setMode] = useState("create");
+  const [selected, setSelected] = useState(null);
 
-  const openModal = () => {
+  const initialValues = useMemo(() => {
+    if (!selected) {
+      return {
+        type: "url",
+        url: "",
+        archivo: null,
+        nombre: "",
+        eje: {
+          value: null,
+          label: "Seleccione un eje",
+        },
+        descripcion: "",
+        id_poblacion: [],
+        visibilidad: false,
+        estado: "Pendiente",
+        recomendacion: "",
+      };
+    }
+
+    return {
+      type: selected.archivo ? "archivo" : "url",
+      id: selected.id,
+      url: selected.url,
+      archivo: selected.archivo,
+      nombre: selected.nombre,
+      eje: {
+        value: selected.id_linea,
+        label: ejes.find((eje) => eje.value === selected.id_linea).label,
+      },
+      descripcion: selected.descripcion,
+      id_poblacion: selected.id_poblacion.map((p) => ({
+        value: p.id,
+        label: p.nombre,
+      })),
+      visibilidad: selected.visibilidad,
+      estado: selected.estado,
+      recomendacion: selected.recomendacion,
+    };
+  }, [selected]);
+
+  const showModalCreate = () => {
     setIsOpen(true);
+    setMode("create");
   };
 
   const closeModal = () => {
     setIsOpen(false);
   };
 
+  function onShowMore(contenido) {
+    setIsOpen(true);
+    setMode("view");
+    setSelected(contenido);
+  }
+
   return (
     <>
+      <ModalCreateDigitales
+        mode={mode}
+        initialValues={initialValues}
+        isOpen={isOpen}
+        onClose={closeModal}
+      />
+
       <div className="flex justify-between">
         <h2 className="text-2xl font-medium max-sm:mx-2">
           Contenidos Digitales
         </h2>
-        {/* el button lo que hará es sacar un modal con el form de un contenido digital */}
-        <button
-          onClick={openModal}
-          className="rounded-md font-normal px-2 bg-blue-100 hover:bg-blue-300"
-        >
-          Crear un Contenido Digital
-        </button>
+        {isDocente(user) && (
+          <button
+            onClick={showModalCreate}
+            className="rounded-md bg-blue-100 px-2 font-normal hover:bg-blue-300"
+          >
+            Crear un Contenido Digital
+          </button>
+        )}
       </div>
-      <Modal isOpen={isOpen} closeModal={closeModal} />
-      <hr className="border-stone-400 max-sm:mx-2 mt-2 mb-4" />
-      {digitales ? (
+
+      <hr className="mb-4 mt-2 border-stone-400 max-sm:mx-2" />
+      <div className="mb-4 flex justify-end">
+        <Select value={status} onValueChange={(value) => onChangeStatus(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione el status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Status</SelectLabel>
+              {isLider(user) ? (
+                <>
+                  <SelectItem key={"Pendiente"} value={"Pendiente"}>
+                    {"Pendiente"}
+                  </SelectItem>
+                  <SelectItem key={"Aprobado"} value={"Aprobado"}>
+                    {"Aprobado"}
+                  </SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem key={"Aprobado"} value={"Aprobado"}>
+                    {"Aprobado"}
+                  </SelectItem>
+                  <SelectItem key={"Rechazado"} value={"Rechazado"}>
+                    {"Rechazado"}
+                  </SelectItem>
+                </>
+              )}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+      {digitales.length > 0 ? (
         <section className="grid grid-cols-12 gap-4">
-          {digitales.map((item, index) => (
+          {digitales.map((item) => (
             <div
-              key={index}
-              className="max-sm:w-72 border-delgado rounded-md p-4 w-60 col-span-2 max-sm:col-span-12 max-md:col-span-6 max-lg:col-span-4 max-xl:col-span-3 max-2xl:col-span-3 mb-3 flex flex-col justify-between"
+              key={item.id}
+              className="border-delgado col-span-2 mb-3 flex w-60 flex-col justify-between rounded-md p-4 max-2xl:col-span-3 max-xl:col-span-3 max-lg:col-span-4 max-md:col-span-6 max-sm:col-span-12 max-sm:w-72"
             >
               <div className="">
-                <div className="flex text-stone-500 text-xs">
+                <div className="flex text-xs text-stone-500">
                   <p className="font-light">Población:&nbsp;</p>
                   {item.id_poblacion.nombre}
                 </div>
-                <div className="h-52 w-full overflow-hidden mb-4 bg-blue-50 p-4 rounded-lg">
+                <div className="mb-4 h-52 w-full overflow-hidden rounded-lg bg-blue-50 p-4">
                   <img
                     src={"/Logos/SingleLogo.webp"}
                     alt={item.titulo}
-                    className="w-full h-full object-contain"
+                    className="h-full w-full object-contain"
                   />
                 </div>
                 <div className="text-center">
                   <h2
-                    className="text-xl font-normal line-clamp-2"
+                    className="line-clamp-2 text-xl font-normal"
                     title={item.titulo}
                   >
                     {item.titulo}
                   </h2>
                   <p
-                    className="text-xs mt-2 line-clamp-3"
+                    className="mt-2 line-clamp-3 text-xs"
                     title={item.descripcion}
                   >
                     {item.descripcion}
                   </p>
                 </div>
               </div>
-              <a
-                href="https://github.com/iKennMarcucci"
-                target="_blank"
-                className="text-white font-medium text-center cursor-pointer hover:bg-blue-500 bg-blue-600 mt-4 rounded-md py-1"
-                rel="noreferrer"
+
+              <button
+                onClick={() => onShowMore(item)}
+                className="my-2 cursor-pointer rounded-md bg-blue-600 px-20 py-1 text-center font-medium text-white hover:bg-blue-500"
               >
                 Ver
-              </a>
+              </button>
             </div>
           ))}
         </section>
       ) : (
         <>
-          <p className="text-center text-xl mt-4">
+          <p className="mt-4 text-center text-xl">
             No existen Contenidos Digitales creados. ¡Crea uno nuevo!
           </p>
         </>
@@ -88,26 +189,3 @@ function DigitalesControl() {
 }
 
 export default DigitalesControl;
-
-// SoftTICTAC 22/11/2023  6:30 pm
-
-// - Falta la creación de Contenidos Digitales.
-
-// - Falta la creación de Herramientas Pedagógicas.
-
-// - Falta integración con Backend.
-
-// - Falta Organizar funcionalidades en el Sidebar.
-
-//    • Lider PPT:
-//       --> Peticiones (Contenidos Digitales y Herramientas a Aprobar)
-
-//    • Docente:
-//       --> Crear Herramientas y Contenidos Digitales (Manejar Borradores en LocalStorage)
-//       --> Mis Peticiones (Pendientes, Aceptadas y Rechazadas)
-//       --> Mis Correcciones (Herramientas y/o Contenidos Digitales rechazados con descripciones)
-
-//    • Administrativos:
-//       --> Gestionar roles de un usuario
-
-// - Responsive
