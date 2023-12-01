@@ -132,7 +132,7 @@ function getEjeByHerramienta(herramienta) {
 
 const HerramientasContextProvider = ({ children }) => {
   const { user } = useAuth();
-  const [status, setStatus] = useState(Status.PENDIENTE);
+  const [status, setStatus] = useState(undefined);
   const [herramientas, setHerramientas] = useState([]);
 
   useEffect(() => {

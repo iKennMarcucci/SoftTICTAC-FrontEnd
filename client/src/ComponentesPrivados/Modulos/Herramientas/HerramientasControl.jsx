@@ -8,7 +8,9 @@ import HerramientasControlItem from "./HerramientasControlItem";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -58,28 +60,31 @@ function HerramientasControl() {
       <div className="mb-4 flex justify-end">
         <Select value={status} onValueChange={(value) => onChangeStatus(value)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder="Seleccione el status" />
           </SelectTrigger>
           <SelectContent>
-            {isLider(user) ? (
-              <>
-                <SelectItem key={"Pendiente"} value={"Pendiente"}>
-                  {"Pendiente"}
-                </SelectItem>
-                <SelectItem key={"Aprobado"} value={"Aprobado"}>
-                  {"Aprobado"}
-                </SelectItem>
-              </>
-            ) : (
-              <>
-                <SelectItem key={"Aprobado"} value={"Aprobado"}>
-                  {"Aprobado"}
-                </SelectItem>
-                <SelectItem key={"Rechazado"} value={"Rechazado"}>
-                  {"Rechazado"}
-                </SelectItem>
-              </>
-            )}
+            <SelectGroup>
+              <SelectLabel>Status</SelectLabel>
+              {isLider(user) ? (
+                <>
+                  <SelectItem key={"Pendiente"} value={"Pendiente"}>
+                    {"Pendiente"}
+                  </SelectItem>
+                  <SelectItem key={"Aprobado"} value={"Aprobado"}>
+                    {"Aprobado"}
+                  </SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem key={"Aprobado"} value={"Aprobado"}>
+                    {"Aprobado"}
+                  </SelectItem>
+                  <SelectItem key={"Rechazado"} value={"Rechazado"}>
+                    {"Rechazado"}
+                  </SelectItem>
+                </>
+              )}
+            </SelectGroup>
           </SelectContent>
         </Select>
       </div>
