@@ -3,9 +3,10 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { isLider } from "@/utils/User";
 import {
-  getHerramientasPendientes,
+  getHerramientasByStatus,
   getHerramientasRequest,
 } from "@/Api/Peticiones/request.axios";
+import { Status } from "@/types/Status";
 
 const HerramientasContext = createContext({
   herramientas: [],
@@ -17,7 +18,7 @@ export const useHerramienta = () => {
 
   if (!context) {
     throw new Error(
-      "useHerramienta debe estar dentro del proveedor HerramientasContextProvider"
+      "useHerramienta debe estar dentro del proveedor HerramientasContextProvider",
     );
   }
 
@@ -130,6 +131,7 @@ const ejes = [
 
 const HerramientasContextProvider = ({ children }) => {
   const { user } = useAuth();
+  const [status, setStatus] = useState(Status.PENDIENTE);
   const [herramientas, setHerramientas] = useState([]);
 
   useEffect(() => {
@@ -137,7 +139,7 @@ const HerramientasContextProvider = ({ children }) => {
       if (!user) return;
 
       if (isLider(user)) {
-        const response = await getHerramientasPendientes();
+        const response = await getHerramientasByStatus(status);
         setHerramientas(response.data);
         return;
       }
@@ -147,11 +149,13 @@ const HerramientasContextProvider = ({ children }) => {
     }
 
     getHerramientas();
-  }, [user]);
+  }, [user, status]);
 
   const value = {
     herramientas,
     ejes,
+    status,
+    onChangeStatus: setStatus,
   };
 
   return (

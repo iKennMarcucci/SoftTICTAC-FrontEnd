@@ -23,8 +23,17 @@ export const getHerramientasRequest = () =>
  */
 export function getHerramientasPendientes() {
   return backendAPI.get(
-    `${endpoints.PRIVATE_HERRAMIENTAS}/?estado=${Status.PENDIENTE}`
+    `${endpoints.PRIVATE_HERRAMIENTAS}/?estado=${Status.PENDIENTE}`,
   );
+}
+
+/**
+ * Filtra las herramientas pedagógicas por status
+ * @param {"Aprobado" | "Pendiente" | "Rechazado"} status para filtrar
+ * @returns {Promise<{ data: unknown }>} Petición a la API
+ */
+export function getHerramientasByStatus(status) {
+  return backendAPI.get(`${endpoints.PRIVATE_HERRAMIENTAS}/?estado=${status}`);
 }
 
 export const sendHerramientasRequest = (body) => {
