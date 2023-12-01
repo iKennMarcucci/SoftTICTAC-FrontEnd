@@ -123,6 +123,8 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
     },
   ]);
 
+  const [nombre, setNombre] = useState("");
+
   const handleCheckboxChange = () => {
     setEsPublico(!esPublico);
   };
@@ -140,7 +142,8 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
     if (
       recursos.some(
         (recurso) =>
-          recurso.label.toLocaleLowerCase() === nuevoRecurso.toLocaleLowerCase()
+          recurso.label.toLocaleLowerCase() ===
+          nuevoRecurso.toLocaleLowerCase(),
       )
     ) {
       alert("El recurso ya está en la lista.");
@@ -249,6 +252,8 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
 
       sendHerramientasRequest(data);
       onClose();
+
+      event.target.reset();
     } catch (error) {
       console.error(error);
     }
@@ -278,7 +283,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
   };
 
   const NoOptionsMessage = () => (
-    <h5 className="text-gray-400 select-none cursor-not-allowed w-full text-center">
+    <h5 className="w-full cursor-not-allowed select-none text-center text-gray-400">
       Elige un Eje Transversal Primero
     </h5>
   );
@@ -286,34 +291,34 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
   return (
     isOpen && (
       <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <>
             <div className="fixed inset-0 transition-opacity" onClick={onClose}>
               <div className="absolute inset-0 bg-gray-500 opacity-75" />
             </div>
             <span
-              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              className="hidden sm:inline-block sm:h-screen sm:align-middle"
               aria-hidden="true"
             >
               &#8203;
             </span>
           </>
-          <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-4xl sm:w-full">
+          <div className="inline-block max-w-4xl transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:align-middle">
             {/* Contenido del modal */}
-            <div className="py-4 shadow-lg mb-0.5">
-              <h4 className="font-medium text-center text-2xl">
+            <div className="mb-0.5 py-4 shadow-lg">
+              <h4 className="text-center text-2xl font-medium">
                 Crear Herramienta Pedagógica
               </h4>
             </div>
 
-            <div className="px-4 pb-4 overflow-y-auto max-h-modal flex flex-col">
+            <div className="max-h-modal flex flex-col overflow-y-auto px-4 pb-4">
               <form
                 onSubmit={handleSubmit}
-                className="flex items-center flex-col mx-6"
+                className="mx-6 flex flex-col items-center"
               >
-                <h3 className="max-w-3xl w-full mt-4">General</h3>
-                <hr className="border-delgado-b max-w-3xl w-full mb-4" />
-                <div className="space-y-4 max-w-2xl w-full mb-4">
+                <h3 className="mt-4 w-full max-w-3xl">General</h3>
+                <hr className="border-delgado-b mb-4 w-full max-w-3xl" />
+                <div className="mb-4 w-full max-w-2xl space-y-4">
                   <div>
                     <label htmlFor="eje" className="block text-sm">
                       Eje
@@ -336,9 +341,14 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                       type="text"
                       name="nombre"
                       id="nombre"
-                      className="border-delgado text-sm rounded-md w-full p-2.5 bg-blue-50"
-                      required
+                      value={nombre}
+                      className="border-delgado w-full rounded-md bg-blue-50 p-2.5 text-sm"
                       placeholder="Escribe el nombre de la herramienta"
+                      required
+                      maxLength={50}
+                      onChange={(e) => {
+                        setNombre(e.target.value.slice(0, 50));
+                      }}
                     />
                   </div>
                   <div>
@@ -364,7 +374,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                       type="text"
                       name="tema"
                       id="tema"
-                      className="border-delgado text-sm rounded-lg w-full p-2.5 bg-blue-50"
+                      className="border-delgado w-full rounded-lg bg-blue-50 p-2.5 text-sm"
                       required
                       placeholder="Escribe el tema"
                     />
@@ -377,7 +387,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                       type="text"
                       name="objetivo"
                       id="objetivo"
-                      className="border-delgado text-sm rounded-lg w-full p-2.5 bg-blue-50"
+                      className="border-delgado w-full rounded-lg bg-blue-50 p-2.5 text-sm"
                       required
                       placeholder="Escribe el objetivo a alcanzar"
                     />
@@ -402,9 +412,9 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                <h3 className="max-w-3xl w-full">Momentos para desarrollar</h3>
-                <hr className="border-delgado-b max-w-3xl w-full mb-4" />
-                <div className="space-y-4 max-w-2xl w-full mb-4">
+                <h3 className="w-full max-w-3xl">Momentos para desarrollar</h3>
+                <hr className="border-delgado-b mb-4 w-full max-w-3xl" />
+                <div className="mb-4 w-full max-w-2xl space-y-4">
                   <div>
                     <label
                       htmlFor="presentacion"
@@ -415,7 +425,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                     <textarea
                       name="presentacion"
                       id="presentacion"
-                      className="border-delgado text-sm rounded-lg w-full p-2.5 bg-blue-50 min-h-[100px] resize-none"
+                      className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
                       required
                       placeholder="Escribe como se desarrollará la presentación de la herramienta"
                     />
@@ -445,14 +455,14 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                           type="text"
                           name="recursoxdd"
                           id="recursoxdd"
-                          className="col-span-9 border-delgado text-sm rounded-md w-full p-2.5 bg-blue-50"
+                          className="border-delgado col-span-9 w-full rounded-md bg-blue-50 p-2.5 text-sm"
                           placeholder="Escribe el recurso a utilizar"
                           value={nuevoRecurso}
                           onChange={handleRecursoChange}
                         />
                         <button
                           type="button"
-                          className="col-span-3 font-normal hover:bg-blue-500 bg-blue-600 text-white border-delgado rounded-md"
+                          className="border-delgado col-span-3 rounded-md bg-blue-600 font-normal text-white hover:bg-blue-500"
                           onClick={handleAgregarRecurso}
                         >
                           Añadir Recurso
@@ -460,7 +470,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                       </div>
                     </div>
 
-                    <table className="text-center w-full">
+                    <table className="w-full text-center">
                       <thead>
                         <tr>
                           <th className="border-delgado w-6/12">Proceso</th>
@@ -479,21 +489,21 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                                   handleInputChange(
                                     index,
                                     "proceso",
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
-                                className="text-sm rounded-lg w-full p-2.5 bg-blue-50 min-h-[100px] resize-none border-delgado"
+                                className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
                                 required
                                 placeholder="Escribe cuales son los procesos de desarrollo de la herramienta"
                               />
                             </td>
-                            <td className="text-start px-2 border-delgado-r">
+                            <td className="border-delgado-r px-2 text-start">
                               <Select
                                 value={actividad.recursos}
                                 onChange={(selectedOption) =>
                                   handleSelectRecursoChange(
                                     index,
-                                    selectedOption
+                                    selectedOption,
                                   )
                                 }
                                 options={recursos}
@@ -504,13 +514,13 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                                 isMulti
                               />
                             </td>
-                            <td className="text-start px-2">
+                            <td className="px-2 text-start">
                               <Select
                                 value={actividad.tiempo}
                                 onChange={(selectedMinutos) =>
                                   handleSelectMinutosChange(
                                     index,
-                                    selectedMinutos
+                                    selectedMinutos,
                                   )
                                 }
                                 options={tiempoOptions}
@@ -527,7 +537,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                     <div className="flex justify-center">
                       <svg
                         onClick={handleAgregarFila}
-                        className="w-10 h-10 cursor-pointer stroke-green-500"
+                        className="h-10 w-10 cursor-pointer stroke-green-500"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -541,7 +551,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                       </svg>
                       <svg
                         onClick={handleEliminarFila}
-                        className="w-10 h-10 cursor-pointer stroke-red-500"
+                        className="h-10 w-10 cursor-pointer stroke-red-500"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -566,7 +576,7 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                     <textarea
                       name="cierre"
                       id="cierre"
-                      className="border-delgado text-sm rounded-lg w-full p-2.5 bg-blue-50 min-h-[100px] resize-none"
+                      className="border-delgado min-h-[100px] w-full resize-none rounded-lg bg-blue-50 p-2.5 text-sm"
                       required
                       placeholder="Escribe como se cerrará el desarrollo de la herramienta"
                     />
@@ -590,10 +600,10 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                <div className="text-center max-w-md w-full">
+                <div className="w-full max-w-md text-center">
                   <button
                     type="submit"
-                    className="hover:bg-blue-500 bg-blue-600 w-full text-white font-medium py-2 rounded-lg max-sm:mb-8"
+                    className="w-full rounded-lg bg-blue-600 py-2 font-medium text-white hover:bg-blue-500 max-sm:mb-8"
                   >
                     Enviar
                   </button>
@@ -602,10 +612,10 @@ function ModalCreateHerramienta({ isOpen, onClose }) {
             </div>
 
             {/* Botones del modal */}
-            <div className="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <div className="bg-gray-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
               <button
                 type="button"
-                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 hover:bg-blue-500 bg-blue-600 text-white font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                 onClick={onClose}
               >
                 Cerrar

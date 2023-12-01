@@ -4,7 +4,7 @@ import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
 import HerramientaDetails from "./Comp/HerramientaDetails";
 import ModalCreateHerramienta from "./Comp/ModalCreateHerramienta";
 import HerramientasItem from "./HerramientasItem";
-import { Status } from "@/types/Status";
+
 import {
   Select,
   SelectContent,
@@ -54,25 +54,34 @@ function HerramientasControl() {
       </div>
       <ModalCreateHerramienta isOpen={showCreate} onClose={closeModalCreate} />
       <hr className="mb-4 mt-2 border-stone-400 max-sm:mx-2" />
-      {isLider(user) && (
-        <div className="flex justify-end">
-          <Select
-            value={status}
-            onValueChange={(value) => onChangeStatus(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.values(Status).map((status) => (
-                <SelectItem key={status} value={status}>
-                  {status}
+      <div className="mb-4 flex justify-end">
+        <Select value={status} onValueChange={(value) => onChangeStatus(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            {isLider(user) ? (
+              <>
+                <SelectItem key={"Pendiente"} value={"Pendiente"}>
+                  {"Pendiente"}
                 </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+                <SelectItem key={"Aprobado"} value={"Aprobado"}>
+                  {"Aprobado"}
+                </SelectItem>
+              </>
+            ) : (
+              <>
+                <SelectItem key={"Aprobado"} value={"Aprobado"}>
+                  {"Aprobado"}
+                </SelectItem>
+                <SelectItem key={"Rechazado"} value={"Rechazado"}>
+                  {"Rechazado"}
+                </SelectItem>
+              </>
+            )}
+          </SelectContent>
+        </Select>
+      </div>
       {herramientas.length > 0 ? (
         <section className="grid grid-cols-12 gap-4">
           {herramientas.map((item, index) => (

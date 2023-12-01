@@ -4,8 +4,8 @@
 
 ### Líder
 
-- [] Listar herramientas pedagógicas pendientes de revisión
-- [] Aprobar herramientas pedagógicas
+- [x] Listar herramientas pedagógicas pendientes de revisión
+- [x] Aprobar herramientas pedagógicas
 - [] Rechazar herramientas pedagógicas y dejar recomendaciones
 
 ### Docente

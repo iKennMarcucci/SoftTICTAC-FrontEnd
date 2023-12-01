@@ -144,6 +144,12 @@ const HerramientasContextProvider = ({ children }) => {
         return;
       }
 
+      if (status === Status.RECHAZADO) {
+        const response = await getHerramientasByStatus(Status.RECHAZADO);
+        setHerramientas(response.data);
+        return;
+      }
+
       const response = await getHerramientasRequest();
       setHerramientas(response.data);
     }
