@@ -12,7 +12,7 @@ import {
   sendContenidosRequest,
 } from "@/Api/Peticiones/request.axios";
 import { useAuth } from "@/Contextos/AuthContext";
-import { isLider } from "@/utils/User";
+import { isDocente, isLider } from "@/utils/User";
 import { Status } from "@/types/Status";
 
 const DigitalesContext = createContext();
@@ -33,20 +33,14 @@ const DigitalesContextProvider = ({ children }) => {
   const { user } = useAuth();
 
   const [digitales, setDigitales] = useState([]);
-  const [status, setStatus] = useState(undefined);
+  const [status, setStatus] = useState(Status.APROBADO);
 
   const getDigitales = useCallback(async () => {
     if (!user || !status) return;
 
-    if (isLider(user)) {
+    if (isLider(user) || isDocente(user)) {
       const res = await getContenidosByStatus(status);
       setDigitales(res.data);
-      return;
-    }
-
-    if (status === Status.RECHAZADO) {
-      const response = await getContenidosByStatus(Status.RECHAZADO);
-      setDigitales(response.data);
       return;
     }
 

@@ -127,7 +127,8 @@ function Navbar() {
                     tabIndex="-1"
                     ref={menuRef}
                   >
-                    <Link
+                    {/* TODO:  */}
+                    {/* <Link
                       to="/profile"
                       className="flex px-4 py-2 text-sm font-normal not-italic text-gray-700"
                       role="menuitem"
@@ -149,7 +150,7 @@ function Navbar() {
                         />
                       </svg>
                       <p className="ml-1.5">Mi Perfil</p>
-                    </Link>
+                    </Link> */}
                     <Link
                       to="/controlpanel"
                       className="flex px-4 py-2 text-sm font-normal not-italic text-gray-700"

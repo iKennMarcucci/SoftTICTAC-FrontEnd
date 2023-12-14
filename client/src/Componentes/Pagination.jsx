@@ -18,7 +18,7 @@ export default function Pagination({
         key={i}
         className={
           isSelected
-            ? "w-auto justify-center bg-black text-center font-normal text-white"
+            ? "w-auto justify-center bg-blue-500 text-center font-normal text-white"
             : "w-auto justify-center text-center font-normal"
         }
         variant={isSelected ? "solid" : "outline"}

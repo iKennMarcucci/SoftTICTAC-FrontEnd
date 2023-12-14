@@ -17,6 +17,8 @@ import {
 import { isDocente, isLider } from "@/utils/User";
 import { useAuth } from "@/Contextos/AuthContext";
 import { Status } from "@/types/Status";
+import { SelectEjes } from "@/Componentes/SelectEjes";
+import Pagination from "@/Componentes/Pagination";
 
 const initialRecursos = [
   {
@@ -90,13 +92,23 @@ const defaultValues = {
   estado: "Pendiente",
 };
 
+const itemsPerPage = 4;
+
 function HerramientasControl() {
   const { user } = useAuth();
-  const { herramientas, status, onChangeStatus, getEjeByHerramienta } =
+  const { herramientas, onChangeStatus, getEjeByHerramienta } =
     useHerramienta();
 
   const [showCreate, setShowCreate] = useState(false);
   const [selectedHerramienta, setSelectedHerramienta] = useState(null);
+  const [page, setPage] = useState(1);
+  const [eje, setEje] = useState(null);
+
+  const filteredHerramientas = herramientas.filter((herramienta) => {
+    if (!eje) return true;
+
+    return herramienta.id_tema.id_linea === eje;
+  });
 
   const showMore = (herramienta) => {
     setSelectedHerramienta(herramienta);
@@ -224,8 +236,12 @@ function HerramientasControl() {
         )}
       </div>
       <hr className="mb-4 mt-2 border-stone-400 max-sm:mx-2" />
-      <div className="mb-4 flex justify-end">
-        <Select value={status} onValueChange={(value) => onChangeStatus(value)}>
+      <div className="mb-4 flex justify-end gap-2">
+        <SelectEjes value={eje} onValueChange={setEje} />
+        <Select
+          defaultValue={Status.APROBADO}
+          onValueChange={(value) => onChangeStatus(value)}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Seleccione el status" />
           </SelectTrigger>
@@ -243,6 +259,9 @@ function HerramientasControl() {
                 </>
               ) : (
                 <>
+                  <SelectItem key={"Pendiente"} value={"Pendiente"}>
+                    {"Pendiente"}
+                  </SelectItem>
                   <SelectItem key={"Aprobado"} value={"Aprobado"}>
                     {"Aprobado"}
                   </SelectItem>
@@ -255,16 +274,26 @@ function HerramientasControl() {
           </SelectContent>
         </Select>
       </div>
-      {herramientas.length > 0 ? (
-        <section className="grid grid-cols-12 gap-4">
-          {herramientas.map((item) => (
-            <HerramientasControlItem
-              key={item.id}
-              item={item}
-              onShowMore={showMore}
-            />
-          ))}
-        </section>
+      {filteredHerramientas.length > 0 ? (
+        <>
+          <section className="mb-2 grid grid-cols-12 gap-4">
+            {filteredHerramientas
+              .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+              .map((item) => (
+                <HerramientasControlItem
+                  key={item.id}
+                  item={item}
+                  onShowMore={showMore}
+                />
+              ))}
+          </section>
+          <Pagination
+            items={filteredHerramientas.length}
+            itemsPerPage={itemsPerPage}
+            selectedPage={page}
+            onChangePage={setPage}
+          />
+        </>
       ) : (
         <>
           <p className="mt-4 text-center text-xl">

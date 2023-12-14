@@ -2,10 +2,12 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { ejes } from "@/utils/ejes";
+import { SelectGroup } from "@radix-ui/react-select";
 
 export function SelectEjes({ value, onValueChange }) {
   return (
@@ -14,12 +16,15 @@ export function SelectEjes({ value, onValueChange }) {
         <SelectValue placeholder="Seleccione un eje" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value={null}>Todos los ejes</SelectItem>
-        {ejes.map((eje) => (
-          <SelectItem key={eje.value} value={eje.value}>
-            {eje.label}
-          </SelectItem>
-        ))}
+        <SelectGroup>
+          <SelectLabel>Eje</SelectLabel>
+          <SelectItem value={null}>Todos los ejes</SelectItem>
+          {ejes.map((eje) => (
+            <SelectItem key={eje.value} value={eje.value}>
+              {eje.label}
+            </SelectItem>
+          ))}
+        </SelectGroup>
       </SelectContent>
     </Select>
   );
