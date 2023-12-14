@@ -34,20 +34,20 @@ const itemsPerPage = 2;
 
 function Herramientas() {
   const [herramientas, setHerramientas] = useState([]);
-  const [eje, setEje] = useState(ejes[0].value);
+  const [eje, setEje] = useState(null);
   const [page, setPage] = useState(1);
 
   const filteredHerramientas = useMemo(() => {
-    return herramientas
-      .filter((herramienta) => {
-        const { value } = ejes.find(
-          (eje) => eje.value === herramienta.id_tema.id_linea,
-        );
+    return herramientas.filter((herramienta) => {
+      if (!eje) return herramienta.visibilidad;
 
-        return value === eje && herramienta.visibilidad;
-      })
-      .slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [herramientas, eje, page]);
+      const { value } = ejes.find(
+        (eje) => eje.value === herramienta.id_tema.id_linea,
+      );
+
+      return value === eje && herramienta.visibilidad;
+    });
+  }, [herramientas, eje]);
 
   useEffect(() => {
     getHerramientasRequest()
@@ -71,9 +71,11 @@ function Herramientas() {
       {filteredHerramientas.length > 0 ? (
         <>
           <section className="container mx-auto mt-2 grid grid-cols-12 justify-items-center">
-            {filteredHerramientas.map((item) => (
-              <HerramientasPublicItem key={item.id} item={item} />
-            ))}
+            {filteredHerramientas
+              .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+              .map((item) => (
+                <HerramientasPublicItem key={item.id} item={item} />
+              ))}
           </section>
           <div className="mt-2 flex justify-center">
             <Pagination
@@ -85,7 +87,7 @@ function Herramientas() {
           </div>
         </>
       ) : (
-        <p>
+        <p className="text-center">
           No se ha encontrado ninguna Herramienta Pedagógica asociada al eje
           seleccionado
         </p>

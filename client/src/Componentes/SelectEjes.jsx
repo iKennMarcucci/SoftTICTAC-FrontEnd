@@ -14,6 +14,7 @@ export function SelectEjes({ value, onValueChange }) {
         <SelectValue placeholder="Seleccione un eje" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value={null}>Todos los ejes</SelectItem>
         {ejes.map((eje) => (
           <SelectItem key={eje.value} value={eje.value}>
             {eje.label}
