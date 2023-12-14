@@ -1,6 +1,10 @@
+import { useEffect, useMemo, useState } from "react";
+
 import { getHerramientasRequest } from "@/Api/Peticiones/request.axios";
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
-import { useEffect, useState } from "react";
+import { SelectEjes } from "@/Componentes/SelectEjes";
+import { ejes } from "@/utils/ejes";
+import Pagination from "@/Componentes/Pagination";
 
 const calcularTiempo = (tiempoMilis) => {
   const horas = Math.floor(tiempoMilis / (1000 * 60 * 60));
@@ -26,8 +30,24 @@ const calcularDuracionTotal = (procesos = []) => {
   return calcularTiempo(total);
 };
 
+const itemsPerPage = 2;
+
 function Herramientas() {
   const [herramientas, setHerramientas] = useState([]);
+  const [eje, setEje] = useState(ejes[0].value);
+  const [page, setPage] = useState(1);
+
+  const filteredHerramientas = useMemo(() => {
+    return herramientas
+      .filter((herramienta) => {
+        const { value } = ejes.find(
+          (eje) => eje.value === herramienta.id_tema.id_linea,
+        );
+
+        return value === eje && herramienta.visibilidad;
+      })
+      .slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  }, [herramientas, eje, page]);
 
   useEffect(() => {
     getHerramientasRequest()
@@ -39,23 +59,37 @@ function Herramientas() {
       });
   }, []);
 
-  if (herramientas.length === 0) {
-    return <p>No se ha encontrado ninguna Herramienta Pedagógica</p>;
-  }
-
   return (
     <main className="container mx-auto mt-10">
       <h2 className="text-2xl font-medium max-sm:mx-2">
         Herramientas Pedagógicas
       </h2>
-      <hr className="border-stone-400 max-sm:mx-2" />
-      <section className="container mx-auto mt-10 grid grid-cols-12 justify-items-center">
-        {herramientas
-          .filter(({ visibilidad }) => visibilidad)
-          .map((item) => (
-            <HerramientasPublicItem key={item.id} item={item} />
-          ))}
-      </section>
+      <hr className="my-1 border-stone-400 max-sm:mx-2" />
+      <div className="mt-2 flex justify-end">
+        <SelectEjes value={eje} onValueChange={setEje} />
+      </div>
+      {filteredHerramientas.length > 0 ? (
+        <>
+          <section className="container mx-auto mt-2 grid grid-cols-12 justify-items-center">
+            {filteredHerramientas.map((item) => (
+              <HerramientasPublicItem key={item.id} item={item} />
+            ))}
+          </section>
+          <div className="mt-2 flex justify-center">
+            <Pagination
+              items={filteredHerramientas.length}
+              itemsPerPage={itemsPerPage}
+              selectedPage={page}
+              onChangePage={setPage}
+            />
+          </div>
+        </>
+      ) : (
+        <p>
+          No se ha encontrado ninguna Herramienta Pedagógica asociada al eje
+          seleccionado
+        </p>
+      )}
     </main>
   );
 }
