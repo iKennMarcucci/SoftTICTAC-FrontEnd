@@ -13,14 +13,20 @@ export const endpoints = {
   UPDATE_HERRAMIENTAS: "/herramientas/update",
 
   //Planes
-
   PRIVATE_PLANES: "/plantrabajo/plan",
 
-  //
   GET_EJES: "/shared/lineas/",
   GET_POBLACIONES: "shared/poblaciones/",
 
   // Proyectos de aula
   PRIVATE_PROYECTOS: "/proyectoaula/proyecto",
   PUBLIC_PROYECTOS: "/proyectoaula/publico",
+
+  // Estadisticas
+  ESTADISTICAS_PROYECTOS: "/estadisticas/proyectos/",
+  ESTADISTICAS_HERRAMIENTAS: "/estadisticas/herramientas/",
+  ESTADISTICAS_CONTENIDOS: "/estadisticas/contenidos/",
+  ESTADISTICAS_TOP_PROYECTOS: "/estadisticas/topproyectos/",
+  ESTADISTICAS_TOP_CONTENIDOS: "/estadisticas/topcontenidos/",
+  ESTADISTICAS_TOP_HERRAMIENTAS: "/estadisticas/topherramientas/",
 };

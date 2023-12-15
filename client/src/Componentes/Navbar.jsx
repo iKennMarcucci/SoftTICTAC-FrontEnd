@@ -87,7 +87,7 @@ function Navbar() {
               </li>
               <li className="flex h-full items-center px-2">
                 <Link
-                  to={"/"}
+                  to={"/estadisticas"}
                   className="flex h-full items-center font-medium hover:text-blue-500"
                 >
                   Estadísticas

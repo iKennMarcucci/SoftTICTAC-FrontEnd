@@ -21,6 +21,7 @@ import { useAuth } from "./Contextos/AuthContext";
 import DigitalesContextProvider from "./Contextos/ModuleContexts/DigitalesContext";
 import HerramientasContextProvider from "./Contextos/ModuleContexts/HerramientasContext";
 import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes";
+import { Estadisticas } from "./Componentes/Modulos/Estadisticas";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -52,10 +53,14 @@ function App() {
           }
         />
         <Route path="/modulo/proyectos-aula" element={<ProyectosAula />} />
+
         <Route
           path="/modulo/proyectos-aula/:id"
           element={<DetailsProyectoAula />}
         />
+
+        <Route path="/estadisticas" element={<Estadisticas />} />
+
         <Route element={<ProtectedRoutes />}>
           <Route path="/controlpanel" element={<Control />}>
             <Route

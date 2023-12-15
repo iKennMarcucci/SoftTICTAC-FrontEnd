@@ -143,3 +143,29 @@ export const getPoblacionesRequest = () =>
 export const loginRequest = (body) => backendAPI.post(endpoints.LOGIN, body);
 
 export const validateTokenRequest = () => backendAPI.get(endpoints.PROFILE);
+
+// Estadisticas
+
+export function getEstadisticasProyectos() {
+  return backendAPI.get(endpoints.ESTADISTICAS_PROYECTOS);
+}
+
+export function getEstadisticasHerramientas() {
+  return backendAPI.get(endpoints.ESTADISTICAS_HERRAMIENTAS);
+}
+
+export function getEstadisticasContenidos() {
+  return backendAPI.get(endpoints.ESTADISTICAS_CONTENIDOS);
+}
+
+export function getEstadisticasTopProyectos() {
+  return backendAPI.get(endpoints.ESTADISTICAS_TOP_PROYECTOS);
+}
+
+export function getEstadisticasTopContenidos() {
+  return backendAPI.get(endpoints.ESTADISTICAS_TOP_CONTENIDOS);
+}
+
+export function getEstadisticasTopHerramientas() {
+  return backendAPI.get(endpoints.ESTADISTICAS_TOP_HERRAMIENTAS);
+}
