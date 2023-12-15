@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { isDocente } from "@/utils/User";
+import { isDocente, isLider } from "@/utils/User";
 import { ejes } from "@/utils/ejes";
 import { Controller, useForm } from "react-hook-form";
 
@@ -134,6 +134,12 @@ export function CreateProyectoAulaControl() {
         console.error(error);
       });
   }, [params?.id]);
+
+  useEffect(() => {
+    if (isLider(user)) {
+      form.setValue("proyecto.id_linea", user.information.user_type);
+    }
+  }, [user, form]);
 
   return (
     <main>
