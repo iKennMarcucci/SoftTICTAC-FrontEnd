@@ -6,7 +6,13 @@ import { RolesTitles, UserRoles } from "@/types/User";
  * @returns
  */
 export function isLider(user) {
-  return Number(user?.information.user_type) === UserRoles.LIDER;
+  return [
+    UserRoles.EMPRENDIMIENTO,
+    UserRoles.SEXUALIDAD,
+    UserRoles.SOCIALES,
+    UserRoles.AMBIENTE,
+    UserRoles.TICS,
+  ].includes(Number(user?.information.user_type));
 }
 
 export function isDocente(user) {

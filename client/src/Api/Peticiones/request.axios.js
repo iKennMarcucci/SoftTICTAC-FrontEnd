@@ -91,6 +91,30 @@ export function rejectHerramienta(id, recomendacion) {
   });
 }
 
+export function createProyecto(body) {
+  return backendAPI.post(`${endpoints.PRIVATE_PROYECTOS}/`, body);
+}
+
+export function updateProyecto(id, body) {
+  return backendAPI.patch(`${endpoints.PRIVATE_PROYECTOS}/${id}/`, body);
+}
+
+export function getAllProyectos() {
+  return backendAPI.get(`${endpoints.PRIVATE_PROYECTOS}/`);
+}
+
+export function getProyectosById(id) {
+  return backendAPI.get(`${endpoints.PRIVATE_PROYECTOS}/${id}/`);
+}
+
+export function getPublicProyectos() {
+  return backendAPI.get(`${endpoints.PUBLIC_PROYECTOS}/`);
+}
+
+export function getPublicProyectoById(id) {
+  return backendAPI.get(`${endpoints.PUBLIC_PROYECTOS}/${id}/`);
+}
+
 // Items Shared
 export const getEjesRequest = () => backendAPI.get(endpoints.GET_EJES);
 

@@ -15,6 +15,10 @@ import HerramientasControl from "./ComponentesPrivados/Modulos/Herramientas/Herr
 import DigitalesControl from "./ComponentesPrivados/Modulos/Digitales/DigitalesControl";
 import HerramientasContextProvider from "./Contextos/ModuleContexts/HerramientasContext";
 import DigitalesContextProvider from "./Contextos/ModuleContexts/DigitalesContext";
+import { ProyectosAulaControl } from "./ComponentesPrivados/Modulos/Proyectos/ProyectosAulaControl";
+import { CreateProyectoAulaControl } from "./ComponentesPrivados/Modulos/Proyectos/CreateProyectoAulaControl";
+import { ProyectosAula } from "./Componentes/Modulos/ProyectosAula/ProyectosAula";
+import { DetailsProyectoAula } from "./Componentes/Modulos/ProyectosAula/DetailsProyectoAula";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -45,7 +49,11 @@ function App() {
             </HerramientasContextProvider>
           }
         />
-
+        <Route path="/modulo/proyectos-aula" element={<ProyectosAula />} />
+        <Route
+          path="/modulo/proyectos-aula/:id"
+          element={<DetailsProyectoAula />}
+        />
         <Route element={<ProtectedRoutes />}>
           <Route path="/controlpanel" element={<Control />}>
             <Route
@@ -63,6 +71,16 @@ function App() {
                   <DigitalesControl />
                 </DigitalesContextProvider>
               }
+            />
+            <Route path="proyectos-aula" element={<ProyectosAulaControl />} />
+
+            <Route
+              path="proyectos-aula/crear"
+              element={<CreateProyectoAulaControl />}
+            />
+            <Route
+              path="proyectos-aula/:id"
+              element={<CreateProyectoAulaControl />}
             />
           </Route>
         </Route>

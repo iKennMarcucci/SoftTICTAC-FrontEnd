@@ -1,5 +1,3 @@
-console.log(import.meta.env.VITE_API_URL);
-
 export const endpoints = {
   URL_API:
     import.meta.env.VITE_API_URL ?? "https://apisoftictac.calzadoan.com/api",
@@ -15,4 +13,8 @@ export const endpoints = {
   UPDATE_HERRAMIENTAS: "/herramientas/update",
   GET_EJES: "/shared/lineas/",
   GET_POBLACIONES: "shared/poblaciones/",
+
+  // Proyectos de aula
+  PRIVATE_PROYECTOS: "/proyectoaula/proyecto",
+  PUBLIC_PROYECTOS: "/proyectoaula/publico",
 };
