@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useHerramienta } from "@/Contextos/ModuleContexts/HerramientasContext";
 import HerramientaDetails from "./Comp/HerramientaDetails";
@@ -130,6 +130,12 @@ function HerramientasControl() {
     setShowCreate(false);
   };
 
+  useEffect(() => {
+    if (isLider(user)) {
+      setEje(Number(user.information.user_type));
+    }
+  }, [user]);
+
   let modal = null;
 
   if (selectedHerramienta && selectedHerramienta.estado !== Status.RECHAZADO) {
@@ -237,7 +243,7 @@ function HerramientasControl() {
       </div>
       <hr className="mb-4 mt-2 border-stone-400 max-sm:mx-2" />
       <div className="mb-4 flex justify-end gap-2">
-        <SelectEjes value={eje} onValueChange={setEje} />
+        {isDocente(user) && <SelectEjes value={eje} onValueChange={setEje} />}
         <Select
           defaultValue={Status.APROBADO}
           onValueChange={(value) => onChangeStatus(value)}

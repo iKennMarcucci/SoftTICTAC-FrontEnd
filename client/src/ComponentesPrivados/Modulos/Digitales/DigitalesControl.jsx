@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/Contextos/AuthContext";
 import { useDigitales } from "@/Contextos/ModuleContexts/DigitalesContext";
@@ -87,6 +87,12 @@ function DigitalesControl() {
     setSelected(contenido);
   }
 
+  useEffect(() => {
+    if (isLider(user)) {
+      setEje(Number(user.information.user_type));
+    }
+  }, [user]);
+
   return (
     <>
       <ModalCreateDigitales
@@ -112,7 +118,7 @@ function DigitalesControl() {
 
       <hr className="mb-4 mt-2 border-stone-400 max-sm:mx-2" />
       <div className="mb-4 flex justify-end gap-2">
-        <SelectEjes value={eje} onValueChange={setEje} />
+        {isDocente(user) && <SelectEjes value={eje} onValueChange={setEje} />}
         <Select
           defaultValue={Status.APROBADO}
           onValueChange={(value) => onChangeStatus(value)}
