@@ -5,9 +5,9 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
 } from "@/components/ui/select";
 import { ejes } from "@/utils/ejes";
-import { SelectGroup } from "@radix-ui/react-select";
 
 export function SelectEjes({ value, onValueChange }) {
   return (

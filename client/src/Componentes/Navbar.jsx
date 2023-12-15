@@ -244,13 +244,10 @@ function Navbar() {
                   </Link>
                 </li>
                 <li className="px-4">
-                  <Link to="/modulo/planes-trabajo"
-                   className="hover:text-blue-500">
-                    Planes de Trabajo
-                  </Link>
-                </li>
-                <li className="px-4">
-                  <Link to="/" className="hover:text-blue-500">
+                  <Link
+                    to="/modulo/proyectos-aula"
+                    className="hover:text-blue-500"
+                  >
                     Proyectos de Aula
                   </Link>
                 </li>
@@ -289,12 +286,15 @@ function Navbar() {
                   </Link>
                 </li>
                 <li className="px-4">
-                  <Link to="/" className="hover:text-blue-500">
+                  <Link
+                    to="modulo/proyectos-aula"
+                    className="hover:text-blue-500"
+                  >
                     Proyectos de Aula
                   </Link>
                 </li>
                 <li className="px-4">
-                  <Link to="/" className="hover:text-blue-500">
+                  <Link to="/estadisticas" className="hover:text-blue-500">
                     Estadísticas
                   </Link>
                 </li>

@@ -13,10 +13,10 @@ function Dashboard() {
   const navigate = useNavigate();
   const showDashboard = location.pathname.startsWith("/controlpanel");
   const selectedHerramientas = location.pathname.startsWith(
-    "/controlpanel/herramientas"
+    "/controlpanel/herramientas",
   );
   const selectedDigitales = location.pathname.startsWith(
-    "/controlpanel/contenidos-digitales"
+    "/controlpanel/contenidos-digitales",
   );
   const selectedProyectos = location.pathname.startsWith(
     "/controlpanel/proyectos-aula"
@@ -75,7 +75,7 @@ function Dashboard() {
   return (
     showDashboard && (
       <>
-        <div className="bg-blue-100 p-4 flex justify-between items-center fixed w-full">
+        <div className="fixed flex w-full items-center justify-between bg-blue-100 p-4">
           <div className="flex items-center space-x-6">
             <div className="scale-75">
               <input id="checkbox" type="checkbox" onClick={toggleSidebar} />
@@ -91,12 +91,12 @@ function Dashboard() {
             </Link>
           </div>
           <div className="flex items-center">
-            <h5 className="italic font-medium  max-sm:hidden">
+            <h5 className="font-medium italic  max-sm:hidden">
               {getRole(user)}
             </h5>
             <div className="relative ml-3">
               <button
-                className="relative flex w-8 h-8 p-1 justify-center items-center gap-2.5 rounded-full bg-blue-700"
+                className="relative flex h-8 w-8 items-center justify-center gap-2.5 rounded-full bg-blue-700 p-1"
                 onClick={toggleMenu}
                 ref={menuButtonRef}
                 aria-expanded={menuClicked ? "true" : "false"}
@@ -106,7 +106,7 @@ function Dashboard() {
                 <svg
                   viewBox="0 0 24 24"
                   strokeWidth={1}
-                  className="w-5 h-5 stroke-white fill-white"
+                  className="h-5 w-5 fill-white stroke-white"
                 >
                   <path
                     strokeLinecap="round"
@@ -117,16 +117,16 @@ function Dashboard() {
               </button>
               {menuClicked && (
                 <div
-                  className="absolute right-0 z-10 mt-2 whitespace-nowrap origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  className="absolute right-0 z-10 mt-2 origin-top-right whitespace-nowrap rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="user-menu-button"
                   tabIndex="-1"
                   ref={menuRef}
                 >
-                  <Link
+                  {/* <Link
                     to="/profile"
-                    className="flex px-4 py-2 text-sm not-italic font-normal text-gray-700"
+                    className="flex px-4 py-2 text-sm font-normal not-italic text-gray-700"
                     role="menuitem"
                     tabIndex="-1"
                     id="user-menu-item-0"
@@ -137,7 +137,7 @@ function Dashboard() {
                       viewBox="0 0 24 24"
                       strokeWidth="1.5"
                       stroke="currentColor"
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                     >
                       <path
                         strokeLinecap="round"
@@ -146,10 +146,10 @@ function Dashboard() {
                       />
                     </svg>
                     <p className="ml-1.5">Mi Perfil</p>
-                  </Link>
+                  </Link> */}
                   <div
                     onClick={cerrarSesion}
-                    className="cursor-pointer flex px-4 py-2 text-sm not-italic font-normal text-gray-700"
+                    className="flex cursor-pointer px-4 py-2 text-sm font-normal not-italic text-gray-700"
                     role="menuitem"
                     tabIndex="-1"
                     id="user-menu-item-2"
@@ -160,7 +160,7 @@ function Dashboard() {
                       viewBox="0 0 24 24"
                       strokeWidth="1.5"
                       stroke="currentColor"
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                     >
                       <path
                         strokeLinecap="round"
@@ -177,23 +177,23 @@ function Dashboard() {
         </div>
         <div className="flex">
           <div
-            className={`fixed top-24 h-full bg-blue-100 border-t-2 border-blue-200 ${
+            className={`fixed top-24 h-full border-t-2 border-blue-200 bg-blue-100 ${
               isOpen ? "w-72" : "w-36 max-sm:w-0"
             } transition-all duration-300`}
           >
             <Link to={"/controlpanel"} className="flex justify-center">
               <img src={Escudo} alt="Logo" width={100} />
             </Link>
-            <div className={`p-4 w-full ${!isOpen && "max-sm:scale-0"}`}>
+            <div className={`w-full p-4 ${!isOpen && "max-sm:scale-0"}`}>
               <input type="checkbox" id="hola" name="hola" hidden />
               <label
-                className={`cursor-pointer mb-1 flex items-center rounded-md justify-between px-2 hover:bg-blue-300 select-none ${
+                className={`mb-1 flex cursor-pointer select-none items-center justify-between rounded-md px-2 hover:bg-blue-300 ${
                   crearAccordionOpen &&
                   "bg-blue-600 text-white hover:text-black"
                 }`}
                 onClick={toggleCrearAccordion}
               >
-                <p className={`font-medium py-1`}>Módulos</p>
+                <p className={`py-1 font-medium`}>Módulos</p>
                 {crearAccordionOpen ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +233,7 @@ function Dashboard() {
                     <li
                       className={`${
                         selectedHerramientas && "bg-blue-300"
-                      } flex w-full cursor-pointer rounded-md mb-1 px-2 hover:bg-blue-300 py-1 ${
+                      } mb-1 flex w-full cursor-pointer rounded-md px-2 py-1 hover:bg-blue-300 ${
                         !isOpen && "justify-center"
                       }`}
                     >
@@ -243,7 +243,7 @@ function Dashboard() {
                         viewBox="0 0 24 24"
                         strokeWidth={1}
                         stroke="currentColor"
-                        className="w-5 h-5"
+                        className="h-5 w-5"
                       >
                         <path
                           strokeLinecap="round"
@@ -256,8 +256,8 @@ function Dashboard() {
                         className={`ml-2 truncate
                                  ${
                                    isOpen
-                                     ? "transition-all opacity-100 duration-500"
-                                     : "transition-all w-0 h-0 opacity-0 duration-100"
+                                     ? "opacity-100 transition-all duration-500"
+                                     : "h-0 w-0 opacity-0 transition-all duration-100"
                                  }`}
                       >
                         Herramientas Pedagógicas
@@ -274,7 +274,7 @@ function Dashboard() {
                     <li
                       className={`${
                         selectedDigitales && "bg-blue-300"
-                      } flex w-full cursor-pointer rounded-md mb-1 px-2 hover:bg-blue-300 py-1 ${
+                      } mb-1 flex w-full cursor-pointer rounded-md px-2 py-1 hover:bg-blue-300 ${
                         !isOpen && "justify-center"
                       }`}
                     >
@@ -284,7 +284,7 @@ function Dashboard() {
                         viewBox="0 0 24 24"
                         strokeWidth={1}
                         stroke="currentColor"
-                        className="w-5 h-5"
+                        className="h-5 w-5"
                       >
                         <path
                           strokeLinecap="round"
@@ -297,8 +297,8 @@ function Dashboard() {
                         className={`ml-2 truncate
                                  ${
                                    isOpen
-                                     ? "transition-all opacity-100 duration-500"
-                                     : "transition-all w-0 h-0 opacity-0 duration-100"
+                                     ? "opacity-100 transition-all duration-500"
+                                     : "h-0 w-0 opacity-0 transition-all duration-100"
                                  }`}
                       >
                         Contenidos Digitales
@@ -306,14 +306,13 @@ function Dashboard() {
                     </li>
                   </Link>
                   <Link
-                    id="proy-aula"
-                    to={"/controlpanel/#"}
+                    to={"/controlpanel/proyectos-aula"}
                     className={`flex w-full  items-center ${
                       !isOpen && "justify-center"
                     }`}
                   >
                     <li
-                      className={`flex w-full cursor-pointer rounded-md mb-1 px-2 hover:bg-blue-300 py-1 ${
+                      className={`mb-1 flex w-full cursor-pointer rounded-md px-2 py-1 hover:bg-blue-300 ${
                         !isOpen && "justify-center"
                       }`}
                     >
@@ -323,7 +322,7 @@ function Dashboard() {
                         viewBox="0 0 24 24"
                         strokeWidth={1}
                         stroke="currentColor"
-                        className="w-5 h-5"
+                        className="h-5 w-5"
                       >
                         <path
                           strokeLinecap="round"
@@ -336,8 +335,8 @@ function Dashboard() {
                         className={`ml-2 truncate
                                  ${
                                    isOpen
-                                     ? "transition-all opacity-100 duration-500"
-                                     : "transition-all w-0 h-0 opacity-0 duration-100"
+                                     ? "opacity-100 transition-all duration-500"
+                                     : "h-0 w-0 opacity-0 transition-all duration-100"
                                  }`}
                       >
                         Proyectos de Aula
@@ -352,7 +351,7 @@ function Dashboard() {
                     }`}
                   >
                     <li
-                      className={`flex w-full cursor-pointer rounded-md mb-1 px-2 hover:bg-blue-300 py-1 ${
+                      className={`mb-1 flex w-full cursor-pointer rounded-md px-2 py-1 hover:bg-blue-300 ${
                         !isOpen && "justify-center"
                       }`}
                     >
@@ -362,7 +361,7 @@ function Dashboard() {
                         viewBox="0 0 24 24"
                         strokeWidth={1}
                         stroke="currentColor"
-                        className="w-5 h-5"
+                        className="h-5 w-5"
                       >
                         <path
                           strokeLinecap="round"
@@ -375,8 +374,8 @@ function Dashboard() {
                         className={`ml-2 truncate
                                  ${
                                    isOpen
-                                     ? "transition-all opacity-100 duration-500"
-                                     : "transition-all w-0 h-0 opacity-0 duration-100"
+                                     ? "opacity-100 transition-all duration-500"
+                                     : "h-0 w-0 opacity-0 transition-all duration-100"
                                  }`}
                       >
                         Planes de Trabajo
@@ -391,7 +390,7 @@ function Dashboard() {
                     }`}
                   >
                     <li
-                      className={`flex w-full cursor-pointer rounded-md mb-1 px-2 hover:bg-blue-300 py-1 ${
+                      className={`mb-1 flex w-full cursor-pointer rounded-md px-2 py-1 hover:bg-blue-300 ${
                         !isOpen && "justify-center"
                       }`}
                     >
@@ -401,7 +400,7 @@ function Dashboard() {
                         viewBox="0 0 24 24"
                         strokeWidth={1}
                         stroke="currentColor"
-                        className="w-5 h-5"
+                        className="h-5 w-5"
                       >
                         <path
                           strokeLinecap="round"
@@ -419,8 +418,8 @@ function Dashboard() {
                         className={`ml-2 truncate
                                  ${
                                    isOpen
-                                     ? "transition-all opacity-100 duration-500"
-                                     : "transition-all w-0 h-0 opacity-0 duration-100"
+                                     ? "opacity-100 transition-all duration-500"
+                                     : "h-0 w-0 opacity-0 transition-all duration-100"
                                  }`}
                       >
                         Estadísticas

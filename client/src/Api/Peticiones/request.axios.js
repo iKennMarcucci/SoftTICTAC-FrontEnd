@@ -36,36 +36,19 @@ export function rejectContenido(id, recomendacion) {
 }
 
 //Planes
-export const getPlanesRequest = () =>
-  backendAPI.get(endpoints.PUBLIC_PLANE);
+export const getAllPlanes = () =>
+  backendAPI.get(`${endpoints.PRIVATE_PLANES}/`);
 
-export function getPlanesPendientes() {
-  return backendAPI.get(`${endpoints.PRIVATE_PLANES}?estado=Pendiente`);
+export function getPlanById(id) {
+  return backendAPI.get(`${endpoints.PRIVATE_PLANES}/${id}/`);
 }
 
-export function getPlanesByStatus(status) {
-  return backendAPI.get(`${endpoints.PRIVATE_PLANES}?estado=${status}`);
+export function createPlan(body) {
+  return backendAPI.post(`${endpoints.PRIVATE_PLANES}/`, body);
 }
 
-export const sendPlanesRequest = (body) =>
-  backendAPI.post(endpoints.CREATE_PLANES, body);
-
-export function updatePlanes(id, body) {
+export function updatePlan(id, body) {
   return backendAPI.patch(`${endpoints.PRIVATE_PLANES}/${id}/`, body);
-}
-
-export function approvePlanes(id) {
-  return backendAPI.patch(`${endpoints.PRIVATE_PLANES}/${id}/`, {
-    estado: "Aprobado",
-    revision: "Aprobado",
-  });
-}
-
-export function rejectPlanes(id, recomendacion) {
-  return backendAPI.patch(`${endpoints.PRIVATE_PLANES}/${id}/`, {
-    estado: "Rechazado",
-    recomendacion: recomendacion,
-  });
 }
 
 // Herramientas Pedagógicas
@@ -122,6 +105,32 @@ export function rejectHerramienta(id, recomendacion) {
     estado: "Rechazado",
     revision: recomendacion,
   });
+}
+
+// Proyectos de aula
+
+export function createProyecto(body) {
+  return backendAPI.post(`${endpoints.PRIVATE_PROYECTOS}/`, body);
+}
+
+export function updateProyecto(id, body) {
+  return backendAPI.patch(`${endpoints.PRIVATE_PROYECTOS}/${id}/`, body);
+}
+
+export function getAllProyectos() {
+  return backendAPI.get(`${endpoints.PRIVATE_PROYECTOS}/`);
+}
+
+export function getProyectoById(id) {
+  return backendAPI.get(`${endpoints.PRIVATE_PROYECTOS}/${id}/`);
+}
+
+export function getPublicProyectos() {
+  return backendAPI.get(`${endpoints.PUBLIC_PROYECTOS}/`);
+}
+
+export function getPublicProyectoById(id) {
+  return backendAPI.get(`${endpoints.PUBLIC_PROYECTOS}/${id}/`);
 }
 
 // Items Shared

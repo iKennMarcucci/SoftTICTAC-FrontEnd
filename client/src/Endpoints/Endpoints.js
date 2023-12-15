@@ -1,5 +1,6 @@
 export const endpoints = {
-  URL_API: "https://apisoftictac.calzadoan.com/api",
+  URL_API:
+    import.meta.env.VITE_API_URL ?? "https://apisoftictac.calzadoan.com/api",
   LOGIN: "auth/token/",
   REFRESH: "/auth/token/refresh/",
   PROFILE: "/user/",
@@ -10,12 +11,16 @@ export const endpoints = {
   PRIVATE_HERRAMIENTAS: "/herramientas/herramienta",
   CREATE_HERRAMIENTAS: "/herramientas/herramienta/",
   UPDATE_HERRAMIENTAS: "/herramientas/update",
+
   //Planes
-  PUBLIC_PLANES: "/plantrabajo/publico/",
+
   PRIVATE_PLANES: "/plantrabajo/plan",
-  CREATE_PLANES: "/plantrabajo/plan/",
-  UPDATE_PLANES: "/plantrabajo/plan",
+
   //
   GET_EJES: "/shared/lineas/",
   GET_POBLACIONES: "shared/poblaciones/",
+
+  // Proyectos de aula
+  PRIVATE_PROYECTOS: "/proyectoaula/proyecto",
+  PUBLIC_PROYECTOS: "/proyectoaula/publico",
 };

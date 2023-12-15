@@ -41,26 +41,6 @@ export const ejes = [
   },
   {
     value: 3,
-    label: "Medio Ambiente",
-    competencias: [
-      {
-        value: 1,
-        label:
-          "Comprende los procesos de cuidado y protección del medio ambiente.",
-      },
-      {
-        value: 2,
-        label: "Cuida y protege el medio ambiente.",
-      },
-      {
-        value: 3,
-        label:
-          "Promueve en su comunidad el cuidado y protección del medio ambiente.",
-      },
-    ],
-  },
-  {
-    value: 4,
     label: "Relaciones Sociales",
     competencias: [
       {
@@ -77,6 +57,26 @@ export const ejes = [
         value: 3,
         label:
           "Tiene capacidad para entender el entorno socioeconómico en su contexto.",
+      },
+    ],
+  },
+  {
+    value: 4,
+    label: "Medio Ambiente",
+    competencias: [
+      {
+        value: 1,
+        label:
+          "Comprende los procesos de cuidado y protección del medio ambiente.",
+      },
+      {
+        value: 2,
+        label: "Cuida y protege el medio ambiente.",
+      },
+      {
+        value: 3,
+        label:
+          "Promueve en su comunidad el cuidado y protección del medio ambiente.",
       },
     ],
   },
