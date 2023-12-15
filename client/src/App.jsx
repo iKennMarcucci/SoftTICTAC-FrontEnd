@@ -97,6 +97,9 @@ function App() {
               path="proyectos-aula/:id"
               element={<CreateProyectoAulaControl />}
             />
+
+            <Route path="estadisticas" element={<Estadisticas />} />
+            <Route path="*" element={"No encontrado"} />
           </Route>
         </Route>
 

@@ -19,10 +19,10 @@ function Dashboard() {
     "/controlpanel/contenidos-digitales",
   );
   const selectedProyectos = location.pathname.startsWith(
-    "/controlpanel/proyectos-aula"
+    "/controlpanel/proyectos-aula",
   );
   const selectedPlanes = location.pathname.startsWith(
-    "/controlpanel/planes-trabajo"
+    "/controlpanel/planes-trabajo",
   );
   const [isOpen, setIsOpen] = useRecoilState(isOpenState);
   const [crearAccordionOpen, setCrearAccordionOpen] = useState(false);
@@ -384,7 +384,7 @@ function Dashboard() {
                   </Link>
                   <Link
                     id="estadisticas"
-                    to={"/controlpanel/#"}
+                    to={"/controlpanel/estadisticas"}
                     className={`flex w-full items-center ${
                       !isOpen && "justify-center"
                     }`}
