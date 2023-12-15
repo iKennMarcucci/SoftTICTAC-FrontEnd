@@ -75,7 +75,7 @@ export function CreatePlanControl() {
         fecha_cierre: null,
         docentes: "",
         cumplimiento: false,
-        observaciones: "",
+        observaciones: "Observaciones",
       },
     ]);
   }
@@ -91,6 +91,10 @@ export function CreatePlanControl() {
 
   function savePlan(values) {
     let request;
+
+    // console.log(values);
+
+    // return;
 
     if (isNew) {
       request = createPlan(values);
@@ -249,11 +253,16 @@ export function CreatePlanControl() {
                               "w-[280px] justify-start text-left font-normal",
                               !field.value && "text-muted-foreground",
                             )}
-                            disabled
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {field.value ? (
-                              format(field.value, "PPP", { locale: es })
+                              format(
+                                typeof field.value === "string"
+                                  ? parseISO(field.value)
+                                  : field.value,
+                                "PPP",
+                                { locale: es },
+                              )
                             ) : (
                               <span>Seleccione una fecha</span>
                             )}
@@ -262,7 +271,18 @@ export function CreatePlanControl() {
                         <PopoverContent className="w-auto p-0">
                           <Calendar
                             mode="single"
-                            selected={field.value}
+                            selected={
+                              typeof field.value === "string"
+                                ? parseISO(field.value)
+                                : field.value
+                            }
+                            onSelect={(date) => {
+                              form.setValue(
+                                field.name,
+                                format(date, "yyyy-MM-dd"),
+                              );
+                            }}
+                            init
                             initialFocus
                             locale={es}
                           />
