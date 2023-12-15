@@ -17,6 +17,15 @@ import {
 } from "@/components/ui/table";
 import { isDocente, isLider } from "@/utils/User";
 import { ejes } from "@/utils/ejes";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 /**
  * Componente para los planes de trabajo en el panel de control
@@ -25,17 +34,26 @@ export function PlanesTrabajoControl() {
   const { user } = useAuth();
   const [planes, setPlanes] = useState([]);
   const [eje, setEje] = useState(null);
+  const [year, setYear] = useState(null);
 
-  const filteredPlanes = planes.filter((plan) => {
-    // Si es lider de linea, solo puede ver los planes de su linea
+  const years = [...new Set(planes.map((plan) => plan["año"]))];
 
-    if (isLider(user))
-      return Number(plan.id_linea) === Number(user.information.user_type);
+  const filteredPlanes = planes
+    .filter((plan) => {
+      // Si es lider de linea, solo puede ver los planes de su linea
+      if (isLider(user)) {
+        return Number(plan.id_linea) === Number(user.information.user_type);
+      }
 
-    if (eje === null) return true;
+      if (eje === null) return true;
 
-    return plan.id_linea === eje;
-  });
+      return plan.id_linea === eje;
+    })
+    .filter((plan) => {
+      if (!year) return true;
+
+      return plan["año"] === year;
+    });
 
   useEffect(() => {
     getAllPlanes()
@@ -54,11 +72,26 @@ export function PlanesTrabajoControl() {
         )}
       </div>
       <hr className="mb-4 mt-2 border-stone-400 max-sm:mx-2" />
-      {isDocente(user) && (
-        <div className="my-4 flex justify-end">
-          <SelectEjes value={eje} onValueChange={setEje} />
-        </div>
-      )}
+      <div className="my-4 flex justify-end">
+        {isDocente(user) && <SelectEjes value={eje} onValueChange={setEje} />}
+        <Select onValueChange={setYear} value={year}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un año" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Año</SelectLabel>
+              <SelectItem value={null}>Todos los años</SelectItem>
+              {years.map((year) => (
+                <SelectItem key={year} value={year}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
       <Table>
         {isLider(user) && (
           <TableCaption>
