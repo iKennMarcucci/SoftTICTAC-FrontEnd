@@ -244,7 +244,8 @@ function Navbar() {
                   </Link>
                 </li>
                 <li className="px-4">
-                  <Link to="/" className="hover:text-blue-500">
+                  <Link to="/modulo/planes-trabajo"
+                   className="hover:text-blue-500">
                     Planes de Trabajo
                   </Link>
                 </li>

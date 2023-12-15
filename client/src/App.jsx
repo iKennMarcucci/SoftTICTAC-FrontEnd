@@ -5,6 +5,7 @@ import Auth from "./Componentes/Auth/Auth";
 import Footer from "./Componentes/Footer";
 import Home from "./Componentes/Home/Home";
 import Digitales from "./Componentes/Modulos/Digitales/Digitales";
+import Planes from "./Componentes/Modulos/Planes/Planes";
 import Herramientas from "./Componentes/Modulos/Herramientas/Herramientas";
 import Navbar from "./Componentes/Navbar";
 import Dashboard from "./ComponentesPrivados/Dashboard";
@@ -13,7 +14,10 @@ import { useAuth } from "./Contextos/AuthContext";
 import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes";
 import HerramientasControl from "./ComponentesPrivados/Modulos/Herramientas/HerramientasControl";
 import DigitalesControl from "./ComponentesPrivados/Modulos/Digitales/DigitalesControl";
+import PlanesControl from "./ComponentesPrivados/Modulos/PlaneTrabajo/PlanesControl";
+//import ProyectosControl from "./ComponentesPrivados/Modulos/Proyectos_Aula/ProyectosContol";
 import HerramientasContextProvider from "./Contextos/ModuleContexts/HerramientasContext";
+import PlanesContextProvider from "./Contextos/ModuleContexts/PlanesContext";
 import DigitalesContextProvider from "./Contextos/ModuleContexts/DigitalesContext";
 
 function App() {
@@ -45,6 +49,14 @@ function App() {
             </HerramientasContextProvider>
           }
         />
+        <Route
+          path="/modulo/planes-trabajo"
+          element={
+            <PlanesContextProvider>
+              <Planes/>
+            </PlanesContextProvider>
+          }
+        />
 
         <Route element={<ProtectedRoutes />}>
           <Route path="/controlpanel" element={<Control />}>
@@ -64,7 +76,24 @@ function App() {
                 </DigitalesContextProvider>
               }
             />
+            <Route
+              path="planes-trabajo"
+              element={
+                <PlanesContextProvider>
+                  <PlanesControl />
+                </PlanesContextProvider>
+              }
+            />
+            <Route
+              path="proyectos-aula"
+              element={
+                <DigitalesContextProvider>
+                  <DigitalesControl />
+                </DigitalesContextProvider>
+              }
+            />
           </Route>
+          
         </Route>
 
         <Route path={"*"} element={"No encontrado"} />

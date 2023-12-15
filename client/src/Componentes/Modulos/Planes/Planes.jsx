@@ -1,31 +1,31 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { getContenidosRequest } from "@/Api/Peticiones/request.axios";
-import ModalCreateDigitales from "@/ComponentesPrivados/Modulos/Digitales/Comp/ModalCreateDigitales";
+import { getPlanesRequest } from "@/Api/Peticiones/request.axios";
+import ModalCreatePlanes from "@/ComponentesPrivados/Modulos/PlaneTrabajo/Comp/ModalCreatePlanes";
 import { ejes } from "@/utils/ejes";
 import { SelectEjes } from "@/Componentes/SelectEjes";
 import Pagination from "@/Componentes/Pagination";
 
 const itemsPerPage = 8;
 
-function Digitales() {
-  const [digitales, setDigitales] = useState([]);
+function Planes() {
+  const [planes, setPlanes] = useState([]);
   const [selected, setSelected] = useState(null);
   const [eje, setEje] = useState(null);
   const [page, setPage] = useState(1);
 
   const filteredContenidos = useMemo(
     () =>
-      digitales.filter((d) => {
+      planes.filter((d) => {
         if (!eje) return d.visibilidad;
         return d.id_linea === eje && d.visibilidad;
       }),
-    [eje, digitales],
+    [eje, planes],
   );
 
   useEffect(() => {
-    getContenidosRequest()
-      .then((res) => setDigitales(res.data))
+    getPlanesRequest()
+      .then((res) => setPlanes(res.data))
       .catch((error) => console.error(error));
   }, []);
 
@@ -35,7 +35,7 @@ function Digitales() {
 
   return (
     <>
-      <ModalCreateDigitales
+      <ModalCreatePlanes
         initialValues={
           selected && {
             type: selected.archivo ? "archivo" : "url",
@@ -62,12 +62,10 @@ function Digitales() {
       />
       <main className="container mx-auto mt-10">
         <h2 className="text-2xl font-medium max-sm:mx-2">
-          Contenidos Digitales
+          Planes de Trabajo 
         </h2>
         <hr className="border-stone-400 max-sm:mx-2" />
-        <div className="mt-2 flex justify-end">
-          <SelectEjes value={eje} onValueChange={setEje} />
-        </div>
+       
         {filteredContenidos.length > 0 ? (
           <>
             <section className="container mx-auto mt-10 grid grid-cols-12 justify-items-center">
@@ -136,10 +134,7 @@ function ContenidoDigitalPublicoItem({ item, onShowMore }) {
         Ver
       </button>
     </div>
-
-    
   );
 }
 
-
-export default Digitales;
+export default Planes;

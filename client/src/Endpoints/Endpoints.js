@@ -10,6 +10,12 @@ export const endpoints = {
   PRIVATE_HERRAMIENTAS: "/herramientas/herramienta",
   CREATE_HERRAMIENTAS: "/herramientas/herramienta/",
   UPDATE_HERRAMIENTAS: "/herramientas/update",
+  //Planes
+  PUBLIC_PLANES: "/plantrabajo/publico/",
+  PRIVATE_PLANES: "/plantrabajo/plan",
+  CREATE_PLANES: "/plantrabajo/plan/",
+  UPDATE_PLANES: "/plantrabajo/plan",
+  //
   GET_EJES: "/shared/lineas/",
   GET_POBLACIONES: "shared/poblaciones/",
 };
